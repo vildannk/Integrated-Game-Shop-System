@@ -41,11 +41,20 @@ function initializePage() {
     $(document).on("spapp:contentChanged", function () {
         bindFormHandlers();
         updateNavbar(); // Re-check for login status
+        if (typeof ConsoleRentalService !== "undefined") {
+            ConsoleRentalService.init();
+        }
+        if (document.getElementById("cart-items") && typeof CartService !== "undefined") {
+            CartService.__init();
+        }
     });
 
     // Initial load
     bindFormHandlers();
     updateNavbar();
+    if (typeof ConsoleRentalService !== "undefined") {
+        ConsoleRentalService.init();
+    }
 }
 
 function bindFormHandlers() {
@@ -132,7 +141,11 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Load cart if on cart page
     if (document.getElementById("cart-items")) {
-        loadCart();
+        if (typeof CartService !== "undefined") {
+            CartService.__init();
+        } else {
+            loadCart();
+        }
     }
 });
 
@@ -148,17 +161,20 @@ document.addEventListener("DOMContentLoaded", function() {
  * @param {string} image - Path to product image
  */
 function addToCart(id, name, price, image) {
-    // Get current cart
+    // Prefer backend cart when logged in
+    const hasToken = !!localStorage.getItem("user_token");
+    if (typeof CartService !== "undefined" && !isNaN(parseInt(id)) && hasToken) {
+        CartService.addToCart(id, { name, price, image });
+        return;
+    }
+
+    // Fallback to local cart for guests
     const cart = JSON.parse(localStorage.getItem("cart"));
-    
-    // Check if product exists
     const existingIndex = cart.findIndex(item => item.id === id);
-    
+
     if (existingIndex >= 0) {
-        // Increase quantity if exists
         cart[existingIndex].quantity++;
     } else {
-        // Add new item
         cart.push({
             id: id,
             name: name,
@@ -167,15 +183,11 @@ function addToCart(id, name, price, image) {
             quantity: 1
         });
     }
-    
-    // Save back to storage
+
     localStorage.setItem("cart", JSON.stringify(cart));
-    
-    // Update UI
     updateCartCounter();
     showNotification(`${name} was added to your cart!`);
-    
-    // If on cart page, refresh display
+
     if (document.getElementById("cart-items")) {
         loadCart();
     }

@@ -9,12 +9,12 @@ let ProductService = {
       success: function (res) {
        const productsDiv = document.getElementById("products-div");
 
-       const data = res[0];
-       
-       productsDiv.innerHTML = ""; // Clear existing products
+        const data = res[0];
+        
+        productsDiv.innerHTML = ""; // Clear existing products
 
-       data.forEach(product => {
-            productsDiv.innerHTML += `
+        data.forEach(product => {
+             productsDiv.innerHTML += `
 
             <div class="col mb-5" id ="product-${product.ProductID}">
             <a href = "#product" onclick="ProductService.getProductById(${product.ProductID})" >
@@ -43,10 +43,10 @@ let ProductService = {
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                                <div class="text-center"><button class="btn btn-outline-dark mt-auto" type="button" onclick="addToCart(${product.ProductID}, '${product.Name.replace(/'/g,"\\'")}', ${product.Price}, '${product.ImageURL}')">Add to cart</button></div>
                             </div>
                         </div>
-                        </a>;
+                        </a>
                     </div>
             `
             

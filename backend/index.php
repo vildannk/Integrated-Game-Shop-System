@@ -15,6 +15,7 @@ Flight::register('cartItemsService', 'CartItemsService');
 Flight::register('wishlistService', 'WishlistService');
 Flight::register('authService', 'AuthService');
 Flight::register('authMiddleware', "AuthMiddleware");
+Flight::register('consoleRentalService', 'ConsoleRentalService');
 
 
 Flight::route('/*', function () {
@@ -63,6 +64,7 @@ require_once __DIR__ . '/services/WishlistService.php';
 require_once __DIR__ . '/services/PaymentService.php';
 require_once __DIR__ . '/services/CartItemsService.php';
 require_once __DIR__ . '/services/AuthService.php';
+require_once __DIR__ . '/services/ConsoleRentalService.php';
 
 Flight::register('productService', 'ProductService');
 Flight::register('userService', 'UserService');
@@ -78,6 +80,7 @@ require_once __DIR__ . '/routes/CartRoutes.php';
 require_once __DIR__ . '/routes/CartItemRoutes.php';
 require_once __DIR__ . '/routes/WishlistRoutes.php';
 require_once __DIR__ . '/routes/PaymentRoutes.php';
+require_once __DIR__ . '/routes/ConsoleRentalRoutes.php';
 
 Flight::route('GET /openapi.json', function() {
     // Suppress all output except JSON

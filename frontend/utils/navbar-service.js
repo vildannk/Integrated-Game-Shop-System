@@ -51,6 +51,8 @@ let NavbarService = {
                             <li><a class="dropdown-item" href="#deals">Deals & Offers</a></li>
                         </ul>
                     </li>
+                    <li class="nav-item"><a class="nav-link" href="#console-rental">Console Rental</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#admin-console-rentals">Rental Admin</a></li>
                     <li class="nav-item"><a class="nav-link" href="#blog">Blog</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
                 </ul>
@@ -105,6 +107,7 @@ let NavbarService = {
                             <li><a class="dropdown-item" href="#deals">Deals & Offers</a></li>
                         </ul>
                     </li>
+                    <li class="nav-item"><a class="nav-link" href="#console-rental">Console Rental</a></li>
                     <li class="nav-item"><a class="nav-link" href="#blog">Blog</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
                 </ul>
@@ -162,6 +165,7 @@ let NavbarService = {
                             <li><a class="dropdown-item" href="#deals">Deals & Offers</a></li>
                         </ul>
                     </li>
+                    <li class="nav-item"><a class="nav-link" href="#console-rental">Console Rental</a></li>
                     <li class="nav-item"><a class="nav-link" href="#blog">Blog</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
                 </ul>

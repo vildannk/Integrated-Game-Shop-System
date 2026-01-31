@@ -4,6 +4,9 @@ let CartService = {
         console.log("CartService initialized");
 
     const userToken = localStorage.getItem("user_token");
+    if (!userToken) {
+      return;
+    }
     const decodedToken = jwt_decode(userToken);
     const userID = decodedToken.user.UserID;
 
@@ -48,11 +51,27 @@ let CartService = {
 
       RestClient.get(
         `cart/${userID}`,
-        function (data) {
-          // Accept both cart_id and cart_ID
-          const cartId = data.CartID || data.CartID;
+        async function (data) {
+          let cartId = data && (data.CartID || data.cart_id);
+          if (!cartId) {
+            // Try to create a cart then refetch
+            try {
+              await $.ajax({
+                url: `http://localhost/vildankWebProject/backend/user/create-cart/${userID}`,
+                type: "POST",
+                headers: { Authentication: `${userToken}` },
+              });
+              const retry = await $.ajax({
+                url: `http://localhost/vildankWebProject/backend/cart/${userID}`,
+                type: "GET",
+                headers: { Authentication: `${userToken}` },
+              });
+              cartId = retry && (retry.CartID || retry.cart_id);
+            } catch (e) {
+              console.error("Failed to create/fetch cart", e);
+            }
+          }
           if (cartId) {
-            console.log("HOLDUP", cartId);
             console.log("CartService::getCartId() -> " + cartId);
             resolve(cartId);
           } else {
@@ -71,10 +90,20 @@ let CartService = {
     });
   },
 
-  addToCart: async function (product_id) {
+  addToCart: async function (product_id, meta) {
     console.log("CartService::addToCart");
+    if (!product_id) {
+      toastr.error("Missing product reference.");
+      return;
+    }
 
-    const cart_ID = await CartService.getCartID();
+    let cart_ID;
+    try {
+      cart_ID = await CartService.getCartID();
+    } catch (e) {
+      toastr.error("Could not find or create a cart. Please log in again.");
+      return;
+    }
 
     console.log("CID:::");
 
@@ -99,13 +128,12 @@ let CartService = {
         console.log(response);
         console.log("Success!!!");
         // Show notification
-        toastr.success("Item added to cart!");
+        toastr.success((meta && meta.name) ? `${meta.name} added to cart` : "Item added to cart!");
         // Increment cart count in navbar
-        let cartCountElem = document.getElementById("cart-count");
-        if (cartCountElem) {
-          let count = parseInt(cartCountElem.textContent) || 0;
-          cartCountElem.textContent = count + 1;
-        }
+        document.querySelectorAll(".cart-counter").forEach(el => {
+          let count = parseInt(el.textContent) || 0;
+          el.textContent = count + 1;
+        });
       },
       error: function (error) {
         console.log("ERROR");
@@ -124,6 +152,9 @@ __init: function () {
   console.log("CartService initialized");
   
   const userToken = localStorage.getItem("user_token");
+  if (!userToken) {
+    return;
+  }
   const decodedToken = jwt_decode(userToken);
   const userID = decodedToken.user.UserID;
 
@@ -172,6 +203,9 @@ __init: function () {
     const priceAmount = taxAmount + totalPrice + 10;
 
     total.innerHTML = `$${parseFloat(priceAmount).toFixed(2)}`;
+    // Update cart counter bubbles
+    const totalItems = data.orders.reduce((sum, order) => sum + parseInt(order.quantity), 0);
+    document.querySelectorAll(".cart-counter").forEach(el => el.textContent = totalItems);
     data.orders.forEach((order) => {
       // Calculate total per product
       const productTotal = parseFloat(order.Price);
@@ -227,6 +261,10 @@ __init: function () {
 deleteOrder: function (cartItemID) {
   console.log("deleting item with id:", cartItemID);
   const userToken = localStorage.getItem("user_token");
+  if (!userToken) {
+    toastr.error("Please log in to manage your cart.");
+    return;
+  }
   // Assume UserService.getUserId() returns the logged-in user's ID
   const userID = UserService.getUserId();
 

@@ -186,6 +186,10 @@ let AdminService = {
                   <label for="addProductStock" class="form-label">Stock</label>
                   <input type="number" class="form-control" id="addProductStock" required>
                 </div>
+                <div class="mb-3">
+                  <label for="addProductCategory" class="form-label">Category ID</label>
+                  <input type="number" class="form-control" id="addProductCategory" required min="1">
+                </div>
         
                 <div class="mb-3">
                   <label for="addProductDescription" class="form-label">Description</label>
@@ -218,6 +222,7 @@ let AdminService = {
             const stock = parseInt($("#addProductStock").val());
             const description = $("#addProductDescription").val().trim();
             const imageUrl = $("#addProductImageURL").val().trim();
+            const categoryId = parseInt($("#addProductCategory").val());
             let valid = true;
             if (!name) {
                 toastr.error("Name is required.");
@@ -239,11 +244,16 @@ let AdminService = {
                 toastr.error("Image URL is required.");
                 valid = false;
             }
+            if (isNaN(categoryId) || categoryId < 1) {
+                toastr.error("Category ID is required.");
+                valid = false;
+            }
             if (!valid) return;
             const newProduct = {
                 Name: name,
                 Price: price,
                 Stock: stock,
+                CategoryID: categoryId,
                 Description: description,
                 ImageURL: imageUrl
             };

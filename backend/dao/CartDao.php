@@ -7,7 +7,7 @@ class CartDao extends BaseDao
 
     public function __construct()
     {
-        parent::__construct('Cart');
+        parent::__construct('cart');
     }
 
     public function getCartByUserID($UserID)
@@ -21,6 +21,20 @@ class CartDao extends BaseDao
         $statement->execute();
 
         return $statement->fetch();
+    }
+
+    public function createCartIfMissing($UserID)
+    {
+        $existing = $this->getCartByUserID($UserID);
+        if ($existing && isset($existing['CartID'])) {
+            return $existing['CartID'];
+        }
+
+        $sql = 'INSERT INTO cart (UserID) VALUES (:UserID)';
+        $statement = $this->connection->prepare($sql);
+        $statement->bindValue(':UserID', $UserID);
+        $statement->execute();
+        return $this->connection->lastInsertId();
     }
 
     public function deleteCartByUserID($UserID)

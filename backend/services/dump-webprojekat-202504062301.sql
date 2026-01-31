@@ -46,6 +46,36 @@ LOCK TABLES `cart` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `cart_items`
+--
+
+DROP TABLE IF EXISTS `cart_items`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cart_items` (
+  `CartItemID` int NOT NULL AUTO_INCREMENT,
+  `CartID` int NOT NULL,
+  `ProductID` int NOT NULL,
+  `quantity` int NOT NULL DEFAULT '1',
+  `CreatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`CartItemID`),
+  KEY `CartID` (`CartID`),
+  KEY `ProductID` (`ProductID`),
+  CONSTRAINT `cart_items_ibfk_1` FOREIGN KEY (`CartID`) REFERENCES `cart` (`CartID`) ON DELETE CASCADE,
+  CONSTRAINT `cart_items_ibfk_2` FOREIGN KEY (`ProductID`) REFERENCES `products` (`ProductID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cart_items`
+--
+
+LOCK TABLES `cart_items` WRITE;
+/*!40000 ALTER TABLE `cart_items` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cart_items` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `categories`
 --
 
@@ -192,6 +222,13 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
+INSERT INTO `products` (`ProductID`,`Name`,`Description`,`Price`,`CategoryID`,`Stock`,`ImageURL`) VALUES
+(101,'PlayStation 5 Console','Next-gen performance with DualSense and ultra-fast SSD.',499.00,1,20,'frontend/assets/ps5.jpg'),
+(102,'Xbox Series X','4K gaming powerhouse, Game Pass ready.',479.00,1,18,'frontend/assets/xseries.jpg'),
+(103,'Nintendo Switch OLED','Hybrid console with vivid OLED display.',349.00,1,25,'frontend/assets/mateo-nCU4yq5xDEQ-unsplash.jpg'),
+(104,'Steam Deck OLED','Portable PC gaming with OLED clarity.',529.00,1,12,'frontend/assets/gamingsetup.jpg'),
+(105,'Razer Kraken Kitty Headset','RGB kitty ears, THX spatial audio.',129.99,3,30,'frontend/assets/razerset.jpeg'),
+(106,'Logitech G29 Racing Wheel','Force feedback wheel for PS5/PC.',399.00,3,10,'frontend/assets/g29.jpg');
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -280,6 +317,42 @@ CREATE TABLE `wishlist` (
 LOCK TABLES `wishlist` WRITE;
 /*!40000 ALTER TABLE `wishlist` DISABLE KEYS */;
 /*!40000 ALTER TABLE `wishlist` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `console_rentals`
+--
+
+DROP TABLE IF EXISTS `console_rentals`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `console_rentals` (
+  `RentalID` int NOT NULL AUTO_INCREMENT,
+  `UserID` int NOT NULL,
+  `ConsoleName` varchar(100) NOT NULL,
+  `Plan` varchar(50) NOT NULL,
+  `StartDate` date NOT NULL,
+  `EndDate` date NOT NULL,
+  `RentalDays` int NOT NULL,
+  `DailyRate` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `TotalPrice` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `DeliveryOption` varchar(50) NOT NULL,
+  `Notes` text,
+  `Status` enum('pending','confirmed','cancelled') DEFAULT 'pending',
+  `CreatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`RentalID`),
+  KEY `UserID` (`UserID`),
+  CONSTRAINT `console_rentals_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `users` (`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `console_rentals`
+--
+
+LOCK TABLES `console_rentals` WRITE;
+/*!40000 ALTER TABLE `console_rentals` DISABLE KEYS */;
+/*!40000 ALTER TABLE `console_rentals` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

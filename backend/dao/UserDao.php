@@ -32,13 +32,9 @@ class UserDao extends BaseDao {
         $sql = "SELECT c.CartID,
                        c.UserID,
                        c.price_total 
-
                  FROM cart c
-
-                 JOIN cart_items ci ON c.CartID = ci.CartID
-
+                 LEFT JOIN cart_items ci ON c.CartID = ci.CartID
                  WHERE c.UserID = :UserID 
-
                  GROUP BY c.CartID, c.UserID;";
 
 
@@ -56,7 +52,10 @@ class UserDao extends BaseDao {
     public function getUserOrders($UserID)
     {   
         
-        $sql = "SELECT * FROM cart_items ci JOIN webprojekat.cart c ON ci.CartID = c.CartID join products p on ci.ProductID = p.ProductID WHERE UserID = :UserID";
+        $sql = "SELECT * FROM cart_items ci 
+                JOIN cart c ON ci.CartID = c.CartID 
+                JOIN products p on ci.ProductID = p.ProductID 
+                WHERE c.UserID = :UserID";
 
 
 
@@ -73,23 +72,25 @@ class UserDao extends BaseDao {
     {
         $validUser = $this->getById($UserID);
 
-        if ($validUser) {
-            $sql = "INSERT INTO cart (UserID) VALUES (:UserID)";
-            $statement = $this->connection->prepare($sql);
-            $statement->bindValue("UserID", $UserID);
-
-            $statement->execute();
-
-            if ($statement) {
-                return ['success' => true, 'Message' => 'Created a cart successfully!'];
-            }
-
-            return ['success' => false, 'Message ' => 'User CANNOT have more than one cart!'];
+        if (!$validUser) {
+            return ['success' => false, 'Message ' => 'Invalid User ID!'];
         }
 
+        $existing = $this->getCartByUserID($UserID);
+        if ($existing && isset($existing['CartID'])) {
+            return ['success' => true, 'CartID' => $existing['CartID'], 'Message' => 'Cart already exists'];
+        }
 
+        $sql = "INSERT INTO cart (UserID) VALUES (:UserID)";
+        $statement = $this->connection->prepare($sql);
+        $statement->bindValue("UserID", $UserID);
+        $statement->execute();
 
-        return ['success' => false, 'Message ' => 'Invalid User ID!'];
+        if ($statement) {
+            return ['success' => true, 'CartID' => $this->connection->lastInsertId(), 'Message' => 'Created a cart successfully!'];
+        }
+
+        return ['success' => false, 'Message ' => 'User CANNOT have more than one cart!'];
     }
 
 
@@ -103,7 +104,7 @@ class UserDao extends BaseDao {
 
         try {
 
-            $statement = "UPDATE carts c SET c.status = 'ordered' WHERE UserID = :UserID";
+            $statement = "UPDATE cart c SET c.status = 'ordered' WHERE UserID = :UserID";
             $statement = $this->connection->prepare($statement);
             $statement->bindValue(":UserID", $UserID);
             $statement->execute();
