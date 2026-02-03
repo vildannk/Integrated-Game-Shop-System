@@ -1,0 +1,360 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Game & Gear Backend",
+    "version": "1.0.0",
+    "description": "Backend routes for the integrated game shop and console rental system."
+  },
+  "servers": [
+    {
+      "url": "http://localhost/diplomski/backend",
+      "description": "Local"
+    }
+  ],
+  "tags": [
+    { "name": "Auth", "description": "Authentication" },
+    { "name": "Users", "description": "User profile" },
+    { "name": "Products", "description": "Product catalog" },
+    { "name": "Categories", "description": "Product categories" },
+    { "name": "Cart", "description": "Shopping cart" },
+    { "name": "Orders", "description": "Orders" },
+    { "name": "Rentals", "description": "Console rentals" },
+    { "name": "Uploads", "description": "Image uploads" }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Product": {
+        "type": "object",
+        "properties": {
+          "ProductID": { "type": "integer" },
+          "Name": { "type": "string" },
+          "Price": { "type": "number" },
+          "OriginalPrice": { "type": ["number", "null"] },
+          "Stock": { "type": "integer" },
+          "OnSale": { "type": "integer" },
+          "CategoryID": { "type": "integer" },
+          "Description": { "type": "string" },
+          "ImageURL": { "type": "string" },
+          "features": { "type": "string" },
+          "CreatedAt": { "type": "string" }
+        }
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "CategoryID": { "type": "integer" },
+          "CategoryName": { "type": "string" },
+          "CreatedAt": { "type": "string" }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "operationId": "registerUser",
+        "summary": "Register user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Name": { "type": "string" },
+                  "Email": { "type": "string" },
+                  "Password": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "User registered" },
+          "400": { "description": "Invalid input" }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "operationId": "login",
+        "summary": "Login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Email": { "type": "string" },
+                  "Password": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login successful" },
+          "401": { "description": "Unauthorized" }
+        }
+      }
+    },
+    "/users/me": {
+      "get": {
+        "tags": ["Users"],
+        "operationId": "getCurrentUser",
+        "summary": "Get current user",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Current user" },
+          "401": { "description": "Unauthorized" }
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "tags": ["Products"],
+        "operationId": "listProducts",
+        "summary": "List products",
+        "responses": {
+          "200": {
+            "description": "Product list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Product" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Products"],
+        "operationId": "createProduct",
+        "summary": "Create product",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Product" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Created" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" }
+        }
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "tags": ["Products"],
+        "operationId": "getProduct",
+        "summary": "Get product",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Product" },
+          "404": { "description": "Not found" }
+        }
+      },
+      "put": {
+        "tags": ["Products"],
+        "operationId": "updateProduct",
+        "summary": "Update product",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "tags": ["Products"],
+        "operationId": "deleteProduct",
+        "summary": "Delete product",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/categories": {
+      "get": {
+        "tags": ["Categories"],
+        "operationId": "listCategories",
+        "summary": "List categories",
+        "responses": { "200": { "description": "Categories" } }
+      },
+      "post": {
+        "tags": ["Categories"],
+        "operationId": "createCategory",
+        "summary": "Create category",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/categories/{id}": {
+      "get": {
+        "tags": ["Categories"],
+        "operationId": "getCategory",
+        "summary": "Get category",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "Category" } }
+      },
+      "put": {
+        "tags": ["Categories"],
+        "operationId": "updateCategory",
+        "summary": "Update category",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "tags": ["Categories"],
+        "operationId": "deleteCategory",
+        "summary": "Delete category",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/uploads/images": {
+      "post": {
+        "tags": ["Uploads"],
+        "operationId": "uploadImage",
+        "summary": "Upload image",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "201": { "description": "Uploaded" } }
+      }
+    },
+    "/cart": {
+      "get": {
+        "tags": ["Cart"],
+        "operationId": "getCart",
+        "summary": "Get cart",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "Cart" } }
+      }
+    },
+    "/cart/items": {
+      "post": {
+        "tags": ["Cart"],
+        "operationId": "addCartItem",
+        "summary": "Add cart item",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "201": { "description": "Item added" } }
+      }
+    },
+    "/cart/items/{id}": {
+      "delete": {
+        "tags": ["Cart"],
+        "operationId": "removeCartItem",
+        "summary": "Remove cart item",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "Item removed" } }
+      }
+    },
+    "/cart/checkout": {
+      "post": {
+        "tags": ["Cart"],
+        "operationId": "checkout",
+        "summary": "Checkout cart",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "201": { "description": "Order created" } }
+      }
+    },
+    "/orders": {
+      "get": {
+        "tags": ["Orders"],
+        "operationId": "listOrders",
+        "summary": "List all orders",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "Orders" } }
+      }
+    },
+    "/orders/me": {
+      "get": {
+        "tags": ["Orders"],
+        "operationId": "listMyOrders",
+        "summary": "List my orders",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "Orders" } }
+      }
+    },
+    "/orders/{id}": {
+      "get": {
+        "tags": ["Orders"],
+        "operationId": "getOrder",
+        "summary": "Get order",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "Order" } }
+      }
+    },
+    "/rentals/catalog": {
+      "get": {
+        "tags": ["Rentals"],
+        "operationId": "listRentalCatalog",
+        "summary": "Rental catalog",
+        "responses": { "200": { "description": "Catalog" } }
+      }
+    },
+    "/rentals": {
+      "get": {
+        "tags": ["Rentals"],
+        "operationId": "listRentals",
+        "summary": "List rentals",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "Rentals" } }
+      },
+      "post": {
+        "tags": ["Rentals"],
+        "operationId": "createRental",
+        "summary": "Create rental",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "201": { "description": "Rental created" } }
+      }
+    },
+    "/rentals/me": {
+      "get": {
+        "tags": ["Rentals"],
+        "operationId": "listMyRentals",
+        "summary": "My rentals",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "Rentals" } }
+      }
+    },
+    "/rentals/{id}": {
+      "patch": {
+        "tags": ["Rentals"],
+        "operationId": "updateRentalStatus",
+        "summary": "Update rental status",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "Updated" } }
+      }
+    }
+  }
+}

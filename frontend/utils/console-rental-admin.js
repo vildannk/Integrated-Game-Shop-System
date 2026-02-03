@@ -6,14 +6,14 @@ let ConsoleRentalAdmin = {
       return;
     }
     try {
-      const res = await fetch(Constants.PROJECT_BASE_URL + "console-rentals/", {
+      const res = await fetch(Constants.PROJECT_BASE_URL + "rentals", {
         method: "GET",
         headers: {
           Authentication: token
         }
       });
       if (!res.ok) throw new Error("Failed to load rentals");
-      const rentals = await res.json();
+      const rentals = (await res.json()).data || [];
       this.render(rentals || []);
     } catch (e) {
       console.error(e);
@@ -31,44 +31,42 @@ let ConsoleRentalAdmin = {
     }
 
     rentals.forEach(rental => {
-      const statusSelect = `
-        <select class="form-select form-select-sm" data-rental="${rental.RentalID}">
-          ${this.statusOption("pending", rental.Status)}
-          ${this.statusOption("confirmed", rental.Status)}
-          ${this.statusOption("cancelled", rental.Status)}
-        </select>
-      `;
+      const statusBadge = `<span class="badge bg-${this.statusColor(rental.Status)} text-white">${rental.Status}</span>`;
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${rental.RentalID}</td>
         <td>${rental.UserID}</td>
         <td>${rental.ConsoleName}</td>
         <td>${rental.Plan}</td>
-        <td>${rental.StartDate} → ${rental.EndDate}</td>
-        <td>$${parseFloat(rental.TotalPrice || 0).toFixed(2)}</td>
-        <td>${statusSelect}</td>
+        <td>${rental.StartDate} - ${rental.EndDate}</td>
+        <td>${formatBAM(rental.TotalPrice || 0)}</td>
+        <td>${statusBadge}</td>
         <td>
-          <button class="btn btn-outline-primary btn-sm" type="button" onclick="ConsoleRentalAdmin.updateStatus(${rental.RentalID})">
-            Update
-          </button>
+          <div class="d-flex gap-2 justify-content-center">
+            <button class="btn btn-outline-primary btn-sm" type="button" onclick="ConsoleRentalAdmin.updateStatusValue(${rental.RentalID}, 'confirmed')">
+              Accept
+            </button>
+            <button class="btn btn-outline-danger btn-sm" type="button" onclick="ConsoleRentalAdmin.updateStatusValue(${rental.RentalID}, 'cancelled')">
+              Decline
+            </button>
+          </div>
         </td>
       `;
       tbody.appendChild(row);
     });
   },
 
-  statusOption: function (value, current) {
-    const selected = (current || "").toLowerCase() === value ? "selected" : "";
-    return `<option value="${value}" ${selected}>${value}</option>`;
+  statusColor: function (status) {
+    const normalized = (status || "").toLowerCase();
+    if (normalized === "confirmed") return "success";
+    if (normalized === "cancelled") return "danger";
+    return "secondary";
   },
 
-  updateStatus: async function (rentalId) {
-    const select = document.querySelector(`select[data-rental="${rentalId}"]`);
-    if (!select) return;
-    const status = select.value;
+  updateStatusValue: async function (rentalId, status) {
     try {
-      const res = await fetch(Constants.PROJECT_BASE_URL + `console-rentals/${rentalId}/status`, {
-        method: "PUT",
+      const res = await fetch(Constants.PROJECT_BASE_URL + `rentals/` + rentalId, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           Authentication: localStorage.getItem("user_token")
@@ -76,7 +74,8 @@ let ConsoleRentalAdmin = {
         body: JSON.stringify({ Status: status })
       });
       if (!res.ok) throw new Error("Failed to update");
-      toastr.success("Status updated");
+      toastr.success(status === "confirmed" ? "Rental accepted" : "Rental declined");
+      this.load();
     } catch (e) {
       console.error(e);
       toastr.error("Unable to update status");

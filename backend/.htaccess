@@ -1,6 +1,6 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /vildankWebProject/backend/
+    RewriteBase /diplomski/backend/
     
     # Allow direct access to files that exist
     RewriteCond %{REQUEST_FILENAME} -f [OR]

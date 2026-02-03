@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Config.php';
+require_once __DIR__ . '/../config/Config.php';
 
 class Database{
 
@@ -27,4 +27,4 @@ class Database{
         return self::$connection;
     }
 }
-?>
+

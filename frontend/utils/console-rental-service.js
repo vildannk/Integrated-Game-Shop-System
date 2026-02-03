@@ -1,36 +1,159 @@
+function resolveRentalImage(url) {
+  if (!url) return '';
+  const v = window.__IMG_CACHE_BUST || '';
+  const addBust = (u) => v ? (u + (u.includes('?') ? '&' : '?') + 'v=' + v) : u;
+  if (url.startsWith('http')) return addBust(url);
+  if (url.startsWith('/')) return addBust(url);
+  return addBust(`${window.location.origin}/diplomski/${url}`);
+}
 let ConsoleRentalService = {
-  rates: {
-    "PlayStation 5": 25,
-    "Xbox Series X": 22,
-    "Nintendo Switch OLED": 18,
-    "Steam Deck OLED": 20
-  },
+  catalog: [],
+  rates: {},
+  selectedConsole: null,
 
   init: function () {
     const form = document.getElementById("console-rental-form");
     if (!form) return;
 
-    if (form.dataset.bound === "true") {
-      this.updateSummary();
+    const alreadyBound = form.dataset.bound === "true";
+
+    this.fetchCatalog().then(() => {
+      this.renderCards();
+      this.populateSelect();
+      this.updateRateCards();
+      this.bindConsoleCards();
+      if (!alreadyBound) {
+        this.bindForm(form);
+        this.prefillDates();
+        form.dataset.bound = "true";
+      }
       this.fetchMyRentals();
+      this.updateSummary();
+      if (this.catalog.length && !this.selectedConsole) {
+        this.setSelectedConsole(this.catalog[0].Name);
+      } else if (this.selectedConsole) {
+        this.highlightSelected(this.selectedConsole);
+      }
+    });
+  },
+
+  fetchCatalog: async function () {
+    try {
+      const res = await fetch(Constants.PROJECT_BASE_URL + "rentals/catalog", { cache: 'no-store' });
+      if (!res.ok) throw new Error("Failed to load catalog");
+      const data = (await res.json()).data || [];
+      this.catalog = data;
+      this.rates = {};
+      data.forEach(item => {
+        this.rates[item.Name] = parseFloat(item.DailyRate);
+      });
+    } catch (e) {
+      console.error(e);
+      toastr.error("Unable to load console catalog.");
+    }
+  },
+
+  renderCards: function () {
+    const container = document.getElementById("rental-cards");
+    if (!container) return;
+
+    if (!this.catalog.length) {
+      container.innerHTML = '<div class="col text-center text-muted py-5">No consoles available.</div>';
       return;
     }
 
-    this.bindConsoleCards();
-    this.bindForm(form);
-    this.prefillDates();
-    this.fetchMyRentals();
+    container.innerHTML = '';
+    this.catalog.forEach(item => {
+      container.innerHTML += `
+        <div class="col-lg-3 col-md-6">
+          <div class="card h-100 shadow-sm border-0 console-card" data-console-card data-console-name="${item.Name}">
+            <img src="${resolveRentalImage(item.ImageURL)}" class="card-img-top" alt="${item.Name} rental">
+            <div class="card-body">
+              <h5 class="fw-bold">${item.Name}</h5>
+              <p class="text-muted mb-1">${item.Description || ''}</p>
+              <div class="fw-bold" data-console-rate></div>
+            </div>
+            <div class="card-footer bg-transparent border-0 text-end">
+              <button class="btn btn-outline-dark btn-sm console-select-btn" type="button">Select</button>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+  },
+
+
+  setSelectedConsole: function (name) {
+    this.selectedConsole = name;
+    const select = document.getElementById("consoleType");
+    if (select) {
+      select.value = name;
+    }
+    this.highlightSelected(name);
     this.updateSummary();
-    form.dataset.bound = "true";
+  },
+
+  highlightSelected: function (name) {
+    document.querySelectorAll('[data-console-card]').forEach((card) => {
+      const cardName = card.getAttribute('data-console-name');
+      const btn = card.querySelector('.console-select-btn');
+      if (cardName === name && name) {
+        card.classList.add('console-selected');
+        if (btn) {
+          btn.textContent = 'Unselect';
+          btn.classList.add('console-selected-btn');
+        }
+      } else {
+        card.classList.remove('console-selected');
+        if (btn) {
+          btn.textContent = 'Select';
+          btn.classList.remove('console-selected-btn');
+        }
+      }
+    });
+  },
+  populateSelect: function () {
+    const select = document.getElementById("consoleType");
+    if (!select) return;
+
+    select.innerHTML = '';
+    this.catalog.forEach(item => {
+      const opt = document.createElement("option");
+      opt.value = item.Name;
+      opt.textContent = item.Name;
+      select.appendChild(opt);
+    });
+  },
+
+  updateRateCards: function () {
+    document.querySelectorAll("[data-console-card]").forEach((card) => {
+      const name = card.getAttribute("data-console-name");
+      const rate = this.getDailyRate(name);
+      const el = card.querySelector("[data-console-rate]");
+      if (el) {
+        el.textContent = `${formatBAM(rate)}/day`;
+      }
+    });
   },
 
   bindConsoleCards: function () {
     document.querySelectorAll("[data-console-card]").forEach((card) => {
-      card.addEventListener("click", () => {
+      const btn = card.querySelector('.console-select-btn');
+      if (!btn) return;
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
         const consoleName = card.getAttribute("data-console-name");
+        if (this.selectedConsole === consoleName) {
+          this.selectedConsole = null;
+          this.highlightSelected(null);
+          this.clearSummary();
+          return;
+        }
         const select = document.getElementById("consoleType");
-        select.value = consoleName;
-        this.updateSummary();
+        if (select) {
+          select.value = consoleName;
+        }
+        this.setSelectedConsole(consoleName);
         toastr.success(`${consoleName} selected for rental`);
       });
     });
@@ -41,7 +164,13 @@ let ConsoleRentalService = {
     inputs.forEach((id) => {
       const el = document.getElementById(id);
       if (el) {
-        el.addEventListener("change", () => this.updateSummary());
+        el.addEventListener("change", () => {
+          if (id === 'consoleType') {
+            this.setSelectedConsole(el.value);
+          } else {
+            this.updateSummary();
+          }
+        });
       }
     });
 
@@ -109,7 +238,7 @@ let ConsoleRentalService = {
   },
 
   getDailyRate: function (consoleName) {
-    return this.rates[consoleName] || 20;
+    return this.rates[consoleName] || 0;
   },
 
   updateSummary: function () {
@@ -133,8 +262,8 @@ let ConsoleRentalService = {
     if (summary) {
       summary.querySelector("[data-summary-console]").textContent = consoleName || "Select console";
       summary.querySelector("[data-summary-days]").textContent = days || 0;
-      summary.querySelector("[data-summary-rate]").textContent = `$${dailyRate.toFixed(2)}`;
-      summary.querySelector("[data-summary-total]").textContent = `$${total.toFixed(2)}`;
+      summary.querySelector("[data-summary-rate]").textContent = `${formatBAM(dailyRate)}`;
+      summary.querySelector("[data-summary-total]").textContent = `${formatBAM(total)}`;
     }
   },
 
@@ -156,7 +285,7 @@ let ConsoleRentalService = {
     };
 
     try {
-      const response = await fetch(Constants.PROJECT_BASE_URL + "console-rentals/", {
+      const response = await fetch(Constants.PROJECT_BASE_URL + "rentals", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -183,14 +312,14 @@ let ConsoleRentalService = {
     if (!token) return;
 
     try {
-      const response = await fetch(Constants.PROJECT_BASE_URL + "console-rentals/my", {
+      const response = await fetch(Constants.PROJECT_BASE_URL + "rentals/me", {
         method: "GET",
         headers: {
           Authentication: token
         }
       });
       if (!response.ok) throw new Error("Unable to load rentals");
-      const rentals = await response.json();
+      const rentals = (await response.json()).data || [];
       this.renderHistory(rentals);
     } catch (error) {
       console.warn(error);
@@ -213,7 +342,7 @@ let ConsoleRentalService = {
           <td>${rental.Plan}</td>
           <td>${rental.StartDate}</td>
           <td>${rental.EndDate}</td>
-          <td>$${parseFloat(rental.TotalPrice || 0).toFixed(2)}</td>
+          <td>${formatBAM(rental.TotalPrice || 0)}</td>
           <td><span class="badge bg-${this.statusColor(rental.Status)}">${rental.Status}</span></td>
         </tr>
       `;
@@ -231,3 +360,6 @@ let ConsoleRentalService = {
     }
   }
 };
+
+
+

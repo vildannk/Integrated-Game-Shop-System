@@ -75,11 +75,11 @@ class CartItemsDao extends BaseDao
             return ["Success:" => "False", "Message" => "User not affiliated with that cart"];
         }
 
-        if ($user_ID != Flight::authMiddleware()->getUserId()) {
+        if ($user_ID != Flight::auth_middleware()->getUserId()) {
             return ["Success:" => "False", "Message" => "User ID does NOT match JWT."];
         };
 
-        $sql = 'DELETE FROM cart_items ci WHERE CartItemID = :cart_item_ID';
+        $sql = 'DELETE FROM cart_items WHERE CartItemID = :cart_item_ID';
 
         $statement = $this->connection->prepare($sql);
         $statement->bindValue('cart_item_ID', $cart_item_ID);
@@ -89,3 +89,5 @@ class CartItemsDao extends BaseDao
         return ["Success: " => "True", "Message" => "Successfully deleted item from cart!"];
     }
 }
+
+

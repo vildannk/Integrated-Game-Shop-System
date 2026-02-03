@@ -1,11 +1,8 @@
 let AuthService = {
   register: function () {
-
-
     console.log("Registering user...");
 
     const registerForm = document.getElementById("registerForm");
-
     if (registerForm) {
       console.log("Register form found");
     }
@@ -13,43 +10,35 @@ let AuthService = {
     registerForm.addEventListener("submit", function (event) {
       event.preventDefault();
 
- const username = document.getElementById("registerUsername").value;
-const email = document.getElementById("registerEmail").value;
-const password = document.getElementById("registerPassword").value;
+      const username = document.getElementById("registerUsername").value;
+      const email = document.getElementById("registerEmail").value;
+      const password = document.getElementById("registerPassword").value;
 
-const role = document.getElementById("role").value;
+      let data = {
+        Name: username,
+        Email: email,
+        Password: password,
+      };
 
-
-let data = {
-  Name: username,
-  Email: email,
-  Password: password,
-  RoleID: role,
-};
       if (AuthService.validateEmail(email) == null) {
         toastr.error("Invalid Email!");
       } else {
         $.ajax({
-        url: "http://localhost/vildankWebProject/backend/auth/register",
+          url: Constants.PROJECT_BASE_URL + "auth/register",
           type: "POST",
           data: JSON.stringify(data),
           contentType: "application/json",
           success: function (res) {
-
             console.log("Registration successful");
-                window.location.href = "#login";
+            window.location.href = "#login";
             console.log(res);
             console.log(data);
-
-       
           },
-
           error: function (err) {
             console.log("Registration failed");
             console.log(err);
             toastr.error("Registration failed: " + err.responseText);
           }
-         
         });
       }
     });
@@ -67,6 +56,7 @@ let data = {
     console.log("Logging in user...");
 
     const LoginForm = document.getElementById("loginForm");
+    if (!LoginForm) return;
 
     LoginForm.addEventListener("submit", function (event) {
       event.preventDefault();
@@ -82,14 +72,13 @@ let data = {
       };
 
       $.ajax({
-       url: "http://localhost/vildankWebProject/backend/auth/login",
+        url: Constants.PROJECT_BASE_URL + "auth/login",
         type: "POST",
         data: JSON.stringify(loginData),
         contentType: "application/json",
         success: function (res) {
           console.log(res);
           localStorage.setItem("user_token", res.data.user_token);
-     
           window.location.href = "#home";
         },
         error: function (err) {
@@ -102,7 +91,6 @@ let data = {
 
   logOut: function () {
     localStorage.removeItem("user_token");
-
     NavbarService.renderNavbar();
   },
 };

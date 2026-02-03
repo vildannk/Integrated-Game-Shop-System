@@ -1,6 +1,9 @@
 <?php
+require_once __DIR__ . '/../config/Config.php';
+
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+
 class AuthMiddleware {
    public function verifyToken($token){
        if(!$token)
@@ -19,7 +22,7 @@ class AuthMiddleware {
    public function authorizeRoles($roles) {
        $user = Flight::get('user');
        if (!in_array($user->role, $roles)) {
- Flight::halt(403, 'Forbidden: role not allowed');
+           Flight::halt(403, 'Forbidden: role not allowed');
        }
    }
    function authorizePermission($permission) {
@@ -28,9 +31,6 @@ class AuthMiddleware {
            Flight::halt(403, 'Access denied: permission missing');
        }
    } 
-   
-   
- 
 
     public function verifyIsAdmin()
     {
@@ -48,7 +48,4 @@ class AuthMiddleware {
 
         return $user->UserID;
     }
-
- 
-
 }

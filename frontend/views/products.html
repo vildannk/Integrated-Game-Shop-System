@@ -3,11 +3,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
         <h2 class="fw-bold mb-0">Shop all products</h2>
-        <p class="text-muted mb-0">Fresh stock pulled live from the database.</p>
       </div>
-      <button class="btn btn-outline-dark" type="button" onclick="ProductService.getProducts()">
-        Refresh products
-      </button>
     </div>
     <div id="products-div" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
       <div class="col text-center text-muted py-5">Loading products...</div>
@@ -15,7 +11,30 @@
   </div>
 </section>
 
-<script>
-  NavbarService.__init();
-  ProductService.getProducts();
-</script>
+<section class="py-5" id="phones">
+  <div class="container px-4 px-lg-5">
+    <h3 class="fw-bold mb-4">Phones</h3>
+    <div id="phones-products" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"></div>
+  </div>
+</section>
+
+<section class="py-5 bg-light" id="consoles">
+  <div class="container px-4 px-lg-5">
+    <h3 class="fw-bold mb-4">Consoles</h3>
+    <div id="consoles-products" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"></div>
+  </div>
+</section>
+
+<section class="py-5" id="pc-gadgets">
+  <div class="container px-4 px-lg-5">
+    <h3 class="fw-bold mb-4">PC Gadgets</h3>
+    <div id="pc-gadgets-products" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"></div>
+  </div>
+</section>
+
+<section class="py-5 bg-light" id="deals">
+  <div class="container px-4 px-lg-5">
+    <h3 class="fw-bold mb-4">Deals & Offers</h3>
+    <div id="deals-products" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"></div>
+  </div>
+</section>

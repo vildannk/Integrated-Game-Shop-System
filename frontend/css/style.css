@@ -605,7 +605,7 @@ progress {
   color: #6c757d;
 }
 .blockquote-footer::before {
-  content: "— ";
+  content: "?????";
 }
 
 .img-fluid {
@@ -10996,7 +10996,7 @@ section.py-5.bg-light {
 
 /* Product Title */
 .card-body h5 {
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
 }
@@ -11021,7 +11021,10 @@ section.py-5.bg-light {
   color: white;
   font-weight: bold;
   border-radius: 5px;
-  padding: 0.75rem 1rem;
+  height: 34px;
+  padding: 0 12px;
+  font-size: 0.85rem;
+  line-height: 1;
   transition: background 0.3s ease-in-out;
 }
 
@@ -11126,3 +11129,509 @@ section.py-5.bg-light {
 
 
 
+
+/* === UI Overrides: unified orange buttons + BAM formatting alignment === */
+html, body {
+  height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main#spapp {
+  flex: 1 0 auto;
+}
+
+:root {
+  --brand-orange: #ff7f00;
+  --brand-orange-dark: #e06b00;
+}
+
+.btn,
+.btn:focus,
+.btn:focus-visible,
+.btn:active {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.btn-primary,
+.btn-outline-dark,
+.btn-outline-primary,
+.btn-outline-secondary,
+.btn-outline-warning,
+.btn-outline-info {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--brand-orange);
+  --bs-btn-border-color: var(--brand-orange);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--brand-orange-dark);
+  --bs-btn-hover-border-color: var(--brand-orange-dark);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--brand-orange-dark);
+  --bs-btn-active-border-color: var(--brand-orange-dark);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: var(--brand-orange);
+  --bs-btn-disabled-border-color: var(--brand-orange);
+}
+
+.cart-btn {
+  border: 2px solid var(--brand-orange);
+  color: var(--brand-orange);
+}
+
+.cart-btn:hover {
+  background-color: var(--brand-orange);
+  color: #fff;
+}
+
+.login-btn {
+  border: 2px solid #000 !important;
+  color: #000 !important;
+  background: #fff !important;
+  min-width: 100px;
+  height: 34px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-btn:hover {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+footer.bg-orange {
+  background-color: #000 !important;
+}
+
+
+
+.info-icon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#contact .card-body .d-flex.align-items-center {
+  align-items: flex-start;
+}
+
+#contact .card-body .info-icon {
+  margin-top: 2px;
+}
+
+#contact .card-body {
+  text-align: left;
+}
+
+#contact {
+  position: relative;
+  z-index: 1;
+}
+
+#contact {
+  padding-top: 2rem !important;
+}
+
+#contact .container {
+  margin-top: 1.5rem !important;
+}
+
+
+footer.bg-orange {
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+}
+
+/* Standardize product and rental card image sizes */
+.card-img-top {
+  height: 220px;
+  object-fit: cover;
+  width: 100%;
+}
+
+/* Hot Deal badge color */
+.card .badge.bg-danger {
+  background-color: #ff7f00 !important;
+  border-color: #ff7f00 !important;
+}
+/* Admin page: disable hover scaling */
+.admin-page .card {
+  transition: none;
+}
+.admin-page .card:hover {
+  transform: none;
+}
+/* Admin page sizing + button alignment */
+.admin-page {
+  font-size: 0.95rem;
+}
+.admin-page h1 {
+  font-size: 1.5rem;
+}
+.admin-page .card {
+  padding: 0.75rem !important;
+}
+.admin-page .table {
+  font-size: 0.9rem;
+}
+.admin-page .btn {
+  padding: 0.25rem 0.6rem;
+}
+.admin-page .btn-outline-dark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Admin UI tweaks */
+.admin-page .admin-actions .btn {
+  min-width: 80px;
+}
+.admin-page .action-buttons .btn {
+  min-width: 160px;
+  height: 36px;
+  padding: 0 12px;
+  font-size: 0.9rem;
+}
+.admin-page .action-buttons {
+  align-items: center;
+}
+
+body.admin-mode #navbar,
+body.admin-mode .swiper,
+body.admin-mode .mySwiper {
+  display: none !important;
+}
+
+body.admin-mode.admin-show-navbar #navbar {
+  display: block !important;
+}
+
+body.admin-mode.admin-show-navbar {
+  padding-top: 72px;
+}
+
+/* Product detail image sizing */
+.product-detail-img {
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+/* Nav buttons uniform sizing + color */
+.cart-btn,
+.register-btn,
+#logoutButton {
+  min-width: 100px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--brand-orange-dark) !important;
+  border: 2px solid var(--brand-orange-dark) !important;
+  color: #fff !important;
+}
+
+.cart-btn .badge {
+  background: #000 !important;
+}
+
+#navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1100; }
+body { padding-top: 72px; }
+
+body.admin-mode { padding-top: 0; }
+
+.console-card {
+  border: 1px solid #e9ecef;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.console-card.console-selected {
+  border: 2px solid var(--brand-orange-dark);
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.08);
+}
+
+.admin-header-btn {
+  min-width: 110px;
+  height: 30px;
+  padding: 0 10px;
+  font-size: 0.8rem;
+}
+.console-select-btn {
+  min-width: 90px;
+  height: 34px;
+  padding: 0 12px;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  text-align: center;
+}
+
+.console-select-btn.console-selected-btn {
+  background-color: #111 !important;
+  border-color: #111 !important;
+  color: #fff !important;
+}
+
+.console-card .card-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Product detail Add to Cart sizing */
+#product .btn.btn-primary {
+  height: 34px;
+  padding: 0 12px;
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+#product .btn.btn-outline-dark {
+  height: 34px;
+  padding: 0 12px;
+  font-size: 0.85rem;
+  line-height: 1;
+  background: #ff7f00 !important;
+  border: 2px solid #ff7f00 !important;
+  color: #fff !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#product .btn.btn-outline-dark:hover {
+  background: #e06b00 !important;
+  border-color: #e06b00 !important;
+  color: #fff !important;
+}
+
+/* Checkout modal above navbar */
+.modal {
+  z-index: 1205;
+}
+.modal-backdrop {
+  z-index: 1195;
+}
+
+/* Checkout modal buttons */
+.checkout-modal-actions .btn {
+  min-width: 160px;
+  height: 40px;
+  padding: 0 16px;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-cancel-outline {
+  background: #fff !important;
+  border: 2px solid var(--brand-orange) !important;
+  color: #000 !important;
+}
+
+.btn-cancel-outline:hover {
+  background: var(--brand-orange) !important;
+  color: #fff !important;
+}
+
+/* Notifications */
+.notification-unread {
+  background: #fff8ee;
+  border-left: 4px solid var(--brand-orange);
+}
+.notification-read {
+  opacity: 0.75;
+}
+
+.btn-read-disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+#user-notifications,
+#admin-notifications {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+#user-notifications .list-group-item,
+#admin-notifications .list-group-item,
+#user-notifications-unread .list-group-item,
+#user-notifications-read .list-group-item,
+#admin-notifications-unread .list-group-item,
+#admin-notifications-read .list-group-item {
+  border-radius: 10px;
+  border: 1px solid #e6e6e6;
+}
+
+.notification-filters .btn.active {
+  background: var(--brand-orange) !important;
+  border-color: var(--brand-orange) !important;
+  color: #fff !important;
+}
+
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.badge-rental-status {
+  background: #1e1f23;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  vertical-align: middle;
+}
+
+.notif-counter {
+  background: var(--brand-orange);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.65rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 999px;
+  display: none;
+}
+
+.notification-modal-body {
+  line-height: 1.5;
+  white-space: normal;
+}
+
+/* Console rental submit button sizing to match select/unselect */
+#console-rental-form .btn.btn-primary {
+  min-width: 90px;
+  height: 34px;
+  padding: 0 12px;
+  font-size: 0.85rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+footer {
+  margin-top: auto;
+}
+
+/* Admin UI overhaul */
+body.admin-mode {
+  font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+  background: #f4f5f7;
+  color: #141414;
+}
+body.admin-mode {
+  font-family: var(--bs-body-font-family) !important;
+}
+body.admin-mode .admin-page {
+  max-width: 1200px;
+  margin: 0 auto 48px auto;
+}
+body.admin-mode .admin-header {
+  background: #ffffff;
+  border: 1px solid #e6e7eb;
+  border-radius: 14px;
+  padding: 18px 22px;
+  box-shadow: 0 12px 30px rgba(20, 20, 20, 0.06);
+}
+body.admin-mode .admin-header h1,
+body.admin-mode .admin-actions-row h1 {
+  font-weight: 600;
+  letter-spacing: -0.2px;
+}
+body.admin-mode .admin-actions-row {
+  margin-top: 22px !important;
+  gap: 14px;
+}
+body.admin-mode .admin-actions-row .action-buttons {
+  gap: 10px;
+}
+body.admin-mode .card {
+  border: 1px solid #e4e6ea;
+  border-radius: 16px;
+  box-shadow: 0 12px 24px rgba(20, 20, 20, 0.04);
+}
+body.admin-mode .card h2 {
+  font-weight: 600;
+  letter-spacing: -0.2px;
+}
+body.admin-mode .table {
+  margin-bottom: 0;
+}
+body.admin-mode .table thead th {
+  background: #f3f4f6;
+  font-weight: 600;
+  color: #2a2a2a;
+  border-bottom: 1px solid #e3e5e8;
+}
+body.admin-mode .table td,
+body.admin-mode .table th {
+  vertical-align: middle;
+}
+body.admin-mode .table-striped > tbody > tr:nth-of-type(odd) > * {
+  background-color: #fafbfc;
+}
+body.admin-mode .btn,
+body.admin-mode .btn-sm {
+  font-weight: 600;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+body.admin-mode .btn-primary {
+  background: #ff7f00 !important;
+  border-color: #ff7f00 !important;
+  color: #fff !important;
+}
+body.admin-mode .btn-primary:hover {
+  background: #e06b00 !important;
+  border-color: #e06b00 !important;
+}
+body.admin-mode .btn-outline-dark {
+  border-color: #ff7f00 !important;
+  color: #111 !important;
+  background: #fff !important;
+}
+body.admin-mode .btn-danger {
+  background: #fff !important;
+  border-color: #ff7f00 !important;
+  color: #111 !important;
+}
+body.admin-mode .btn-danger:hover {
+  background: #ff7f00 !important;
+  border-color: #ff7f00 !important;
+  color: #fff !important;
+}
+body.admin-mode .btn-dark {
+  background: #ff7f00 !important;
+  border-color: #ff7f00 !important;
+  color: #fff !important;
+}
+body.admin-mode .admin-actions .btn {
+  min-width: 88px;
+}
+body.admin-mode .action-buttons .btn {
+  min-width: 150px;
+  height: 34px;
+  font-size: 0.85rem;
+}
+body.admin-mode .admin-header-btn {
+  min-width: 120px;
+  height: 32px;
+  font-size: 0.8rem;
+}

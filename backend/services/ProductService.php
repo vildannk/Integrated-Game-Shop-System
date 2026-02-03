@@ -8,12 +8,10 @@ class ProductService extends BaseService {
     }
 
     public function addProduct($productData) {
-        // Service-level validation
         if (empty($productData)) {
             throw new Exception("Product data is required");
         }
 
-        // Format and sanitize data
         if (isset($productData['Price'])) {
             $productData['Price'] = (float)$productData['Price'];
         }
@@ -30,11 +28,6 @@ class ProductService extends BaseService {
         return $this->dao->addProduct($productData);
     }
 
-    public function deleteProduct($productId){
-        return $this->dao->deleteProduct($productId);
-    }
-
-    // Keep all your other methods
     public function getProductsOnSale() {
         return $this->dao->getOnSale();
     }
@@ -54,20 +47,7 @@ class ProductService extends BaseService {
         return $this->dao->updateStock($productId, $newStock);
     }
 
-    public function getById($id){
-        return $this->dao->getById($id);
-    }
-    // Add these methods to support all routes
-    public function getAll() {
+    public function getAllProducts() {
         return $this->dao->getAll();
     }
-
-    public function update($id, $productData) {
-        return $this->dao->update($id, $productData);
-    }
-
-    public function delete($id) {
-        return $this->dao->delete($id);
-    }
 }
-?>

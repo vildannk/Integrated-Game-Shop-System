@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "/Config.php";
+require_once __DIR__ . "/../config/Config.php";
 require_once __DIR__ . "/Database.php";
 
 class BaseDao {
@@ -8,7 +8,7 @@ class BaseDao {
 
     public function __construct($table) {
         $this->table = $table;
-        $this->connection = Database::connect(); // FIXED: use connect() static method
+        $this->connection = Database::connect();
     }
 
     public function getAll($order_column = null, $order_direction = "ASC") {
@@ -57,8 +57,11 @@ class BaseDao {
         return $stmt->execute();
     }
 
+    public function getConnection() {
+        return $this->connection;
+    }
+
     protected function getPrimaryKey() {
         return 'id';
     }
 }
-?>

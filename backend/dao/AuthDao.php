@@ -30,29 +30,24 @@ class AuthDao extends BaseDao
 
  public function register($entity)
 {
-  
-
-    if (empty($entity['Email']) || empty($entity['Password'])) {
-        return ['success' => false, 'error' => 'Email and password are required.'];
+    if (empty($entity['Email']) || empty($entity['Password']) || empty($entity['Name'])) {
+        return ['success' => false, 'error' => 'Name, email and password are required.'];
     }
 
     if (!filter_var($entity['Email'], FILTER_VALIDATE_EMAIL)) {
-        return ['success' => false, 'error' => 'Invalid Email Address!!!'];
+        return ['success' => false, 'error' => 'Invalid email address.'];
     }
 
     $email_exists = $this->getUserByEmail($entity['Email']);
-
     if ($email_exists) {
-        echo "Email already exists\n";
         return ['success' => false, 'error' => 'Email already registered.'];
     }
 
+    // Default all new users to customer role (RoleID = 2). Admins should be set via DB.
+    $entity['RoleID'] = 2;
     $entity['Password'] = password_hash($entity['Password'], PASSWORD_BCRYPT);
 
-    $insertResult = parent::insert($entity); // store result separately
-
-    unset($entity['Password']); // now $entity is still your array
-
+    parent::insert($entity);
     return true;
 }
 
@@ -91,11 +86,12 @@ class AuthDao extends BaseDao
 
         $user = $this->getUserByEmail($entity['Email']);
         if (!$user) {
-            return ['success' => false, 'error' => 'User Already Exists!!!.'];
+            return ['success' => false, 'error' => 'User not found.'];
         }
 
-        if (!$user || !password_verify($entity['Password'], $user['Password']))
-            return ['success' => false, 'error' => 'Invalid123123123 username or password.'];
+        if (!password_verify($entity['Password'], $user['Password'])) {
+            return ['success' => false, 'error' => 'Invalid email or password.'];
+        }
 
         unset($user['Password']);
 

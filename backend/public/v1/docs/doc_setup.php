@@ -12,7 +12,7 @@ use OpenApi\Attributes as OA;
     )
 )]
 #[OA\Server(
-    url: "http://localhost/vildankWebProject/backend/",
+    url: "http://localhost/diplomski/backend/",
     description: "API server"
 )]
 #[OA\SecurityScheme(

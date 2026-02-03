@@ -26,6 +26,16 @@ class ConsoleRentalDao extends BaseDao {
         return $this->connection->lastInsertId();
     }
 
+
+    public function getRentalWithUser($rentalId) {
+        $stmt = $this->connection->prepare(
+            "SELECT r.*, u.Email, u.Name AS UserName FROM console_rentals r JOIN users u ON r.UserID = u.UserID WHERE r.RentalID = :rentalId"
+        );
+        $stmt->bindParam(':rentalId', $rentalId);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function updateStatus($rentalId, $status) {
         $stmt = $this->connection->prepare("UPDATE console_rentals SET Status = :status WHERE RentalID = :rentalId");
         $stmt->bindParam(':status', $status);
@@ -34,4 +44,4 @@ class ConsoleRentalDao extends BaseDao {
         return $stmt->rowCount() > 0;
     }
 }
-?>
+

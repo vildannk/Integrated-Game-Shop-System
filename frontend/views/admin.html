@@ -1,72 +1,54 @@
-<div class="container">
-  <div class="d-flex justify-content-between align-items-center mt-5">
-    <h1 class="text-center">Admin Dashboard</h1>
-    <a href="#admin-console-rentals" class="btn btn-outline-dark">Console Rental Admin</a>
+<div class="container admin-page">
+  <div class="d-flex justify-content-between align-items-center mt-4 admin-actions-row">
+    <h1 class="text-center mb-0">Admin Dashboard</h1>
+    <div class="d-flex gap-2 align-items-center action-buttons">
+      <button class="btn btn-primary btn-sm" type="button" onclick="AdminService.addProductModal()">Add Product</button>
+      <a href="#admin-console-rentals" class="btn btn-primary btn-sm">Console Rental Admin</a>
+      <a href="#admin-notifications" class="btn btn-outline-dark btn-sm">Notifications</a>
+    </div>
   </div>
+
   <div class="row gap-3">
+    <div class="col-md-12 mt-3 d-flex justify-content-start align-items-start flex-column flex-nowrap gap-3">
+      <div class="text-center card p-2 w-100">
+        <h2 class="h5 mb-3">Products</h2>
 
-
-    <div class="col-md-12 mt-5 d-flex justify-content-start align-items-start flex-column flex-nowrap gap-3">
-     
-
-      <div class="text-center card p-2 w-100 ">
-        <h2>Products</h2>
-
-        <div class="d-flex justify-content-center align-items-center" >
-            <table class="table table-striped table-bordered w-100" id="product-table-admin">
-
-                <thead>
-                    <tr>
-                    <th>Product ID</th>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="product-table-body-admin">
-                    
-                </tbody>
-            </table>
-         
+        <div class="d-flex justify-content-center align-items-center">
+          <table class="table table-striped table-bordered w-100 table-sm" id="product-table-admin">
+            <thead>
+              <tr>
+                <th>Product ID</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="product-table-body-admin"></tbody>
+          </table>
         </div>
-        <div>
-      
+      </div>
+
+      <div class="text-center card p-2 w-100">
+        <h2 class="h5 mb-3">Categories</h2>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <button class="btn btn-primary btn-sm" type="button" onclick="AdminService.addCategoryModal()">Add Category</button>
         </div>
-
-        <div class="card-body mt-5 mb-5 overflow-auto text-start px-5" id = "product-card-body">
-          <div class="d-flex flex-row justify-content-center align-items-center">
-            
-            <div class = "d-flex p-2 flex-column justify-content-center align-items-center">
-                <img src = "assets/addIcon.png" class="img-fluid rounded-circle mb-3 mt-3">
-                <p class= "border-bottom" onclick="AdminService.addProductModal()"> Add a Product</p>
-            </div>
-
-
-
-          
+        <div class="d-flex justify-content-center align-items-center">
+          <table class="table table-striped table-bordered w-100 table-sm" id="category-table-admin">
+            <thead>
+              <tr>
+                <th>Category ID</th>
+                <th>Name</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="category-table-body-admin"></tbody>
+          </table>
         </div>
-        </div>
-
       </div>
     </div>
-
-      
   </div>
 </div>
-</div>
 
-
-
-
-
-<div id="addProductModal">
-
-</div>
-
-<script>
-  AdminService.init();
-</script>
-
-<script>
-    AdminService.showAllProducts();
-</script>
+<div id="addProductModal"></div>
+<div id="addCategoryModal"></div>

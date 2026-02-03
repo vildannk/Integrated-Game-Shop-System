@@ -1,302 +1,243 @@
+function resolveCartImage(url) {
+  if (!url) return '';
+  const v = window.__IMG_CACHE_BUST || '';
+  const addBust = (u) => v ? (u + (u.includes('?') ? '&' : '?') + 'v=' + v) : u;
+  if (url.startsWith('http')) return addBust(url);
+  if (url.startsWith('/')) return addBust(url);
+  return addBust(`${window.location.origin}/diplomski/${url}`);
+}
+
+function updateCartTotals(totalPrice) {
+  const subtotal = document.getElementById("subtotal");
+  const tax = document.getElementById("tax");
+  const total = document.getElementById("total");
+  const safeTotal = Number(totalPrice) || 0;
+
+  if (subtotal && tax && total) {
+    subtotal.textContent = `${formatBAM(safeTotal)}`;
+    const taxAmount = safeTotal * 0.1;
+    tax.textContent = `${formatBAM(taxAmount)}`;
+    total.textContent = `${formatBAM(taxAmount + safeTotal + (safeTotal > 0 ? 10 : 0))}`;
+  }
+}
+
 let CartService = {
   initializeCart: function () {
-
-        console.log("CartService initialized");
-
-    const userToken = localStorage.getItem("user_token");
-    if (!userToken) {
-      return;
+    if (!localStorage.getItem("cart")) {
+      localStorage.setItem("cart", JSON.stringify([]));
     }
-    const decodedToken = jwt_decode(userToken);
-    const userID = decodedToken.user.UserID;
-
-
-    console.log(userID);
-
-    const user_ID = {
-      user_id: userID,
-    };
-
-    $.ajax({
-      url: `http://localhost/vildankWebProject/backend/user/create-cart/${userID}`,
-      type: "POST",
-      data: user_ID,
-      headers: {
-        Authentication: `${userToken}`,
-      },
-      success: function (response) {
-        console.log(response);
-        console.log("Cart Initialized.");
-      },
-      error: function (error) {
-        console.error("Response: " + error.innerHTML);
-
-      },
-    })
-
-
   },
 
-  getCartID: function () {
-    return new Promise((resolve, reject) => {
-      const userToken = localStorage.getItem("user_token");
-      if (!userToken) {
-        toastr.error("You must be logged in to add to cart!");
-        reject("User token not found");
-        return;
-      }
-      const decodedToken = jwt_decode(userToken);
-      const userID = decodedToken.user.UserID;
-      console.log("getCartID - USER ID:" + userID);
-
-      RestClient.get(
-        `cart/${userID}`,
-        async function (data) {
-          let cartId = data && (data.CartID || data.cart_id);
-          if (!cartId) {
-            // Try to create a cart then refetch
-            try {
-              await $.ajax({
-                url: `http://localhost/vildankWebProject/backend/user/create-cart/${userID}`,
-                type: "POST",
-                headers: { Authentication: `${userToken}` },
-              });
-              const retry = await $.ajax({
-                url: `http://localhost/vildankWebProject/backend/cart/${userID}`,
-                type: "GET",
-                headers: { Authentication: `${userToken}` },
-              });
-              cartId = retry && (retry.CartID || retry.cart_id);
-            } catch (e) {
-              console.error("Failed to create/fetch cart", e);
-            }
-          }
-          if (cartId) {
-            console.log("CartService::getCartId() -> " + cartId);
-            resolve(cartId);
-          } else {
-            console.error(
-              "getCartID: cart_id not found in response or data is malformed.",
-              data
-            );
-            reject("Cart ID not found in API response");
-          }
-        },
-        function (error) {
-          console.log(error);
-          reject(error);
-        }
-      );
-    });
-  },
-
-  addToCart: async function (product_id, meta) {
-    console.log("CartService::addToCart");
+  addToCart: function (product_id, meta) {
     if (!product_id) {
       toastr.error("Missing product reference.");
       return;
     }
 
-    let cart_ID;
-    try {
-      cart_ID = await CartService.getCartID();
-    } catch (e) {
-      toastr.error("Could not find or create a cart. Please log in again.");
+    const token = localStorage.getItem("user_token");
+    if (!token) {
+      this.initializeCart();
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const existing = cart.find(item => item.ProductID === product_id);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cart.push({
+          ProductID: product_id,
+          Name: meta?.name || "Item",
+          Price: meta?.price || 0,
+          ImageURL: meta?.imageUrl || "",
+          quantity: 1
+        });
+      }
+      localStorage.setItem("cart", JSON.stringify(cart));
+      toastr.success((meta && meta.name) ? `${meta.name} added to cart` : "Item added to cart!");
+      this.__init();
       return;
     }
-
-    console.log("CID:::");
-
-    console.log(cart_ID);
-
-    const data = {
-      CartID: cart_ID,
-      ProductID: product_id,
-      quantity: 1,
-    };
-
-    console.log("endofthis");
 
     $.ajax({
-      url: `http://localhost/vildankWebProject/backend/cart/item/new-item`,
+      url: Constants.PROJECT_BASE_URL + "cart/items",
       type: "POST",
-      data: data,
+      data: JSON.stringify({ ProductID: product_id, quantity: 1 }),
+      contentType: "application/json",
       headers: {
-        Authentication: `${localStorage.getItem("user_token")}`,
+        Authentication: token,
       },
-      success: function (response) {
-        console.log(response);
-        console.log("Success!!!");
-        // Show notification
+      success: () => {
         toastr.success((meta && meta.name) ? `${meta.name} added to cart` : "Item added to cart!");
-        // Increment cart count in navbar
-        document.querySelectorAll(".cart-counter").forEach(el => {
-          let count = parseInt(el.textContent) || 0;
-          el.textContent = count + 1;
-        });
+        this.__init();
       },
-      error: function (error) {
-        console.log("ERROR");
-        console.log(error);
+      error: (error) => {
+        console.error(error);
         toastr.error("Failed to add item to cart.");
-      }});
-    
-
-    console.log(data);
-  
+      }
+    });
   },
 
-
-
-__init: function () {
-  console.log("CartService initialized");
-  
-  const userToken = localStorage.getItem("user_token");
-  if (!userToken) {
-    return;
-  }
-  const decodedToken = jwt_decode(userToken);
-  const userID = decodedToken.user.UserID;
-
-  console.log(userID);
-  console.log("denko medenko init");
-
-  RestClient.get(`user/cart/${userID}`, function (data) {
+  __init: function () {
+    const token = localStorage.getItem("user_token");
     const cartDiv = document.getElementById("cart-items");
-    console.log(cartDiv);
-    console.log("denko ::: ", data);
 
-    if (data.cart === false || !data.cart || !data.orders || data.orders.length === 0) {
-      cartDiv.innerHTML = `
-        <tr>
-          <td colspan="5" class="text-center">
-            <h3>Your Cart is Empty</h3>
-            <p>Browse our store and add some items to your cart!</p>
-          </td>
-        </tr>
-      `;
+    if (!token) {
+      this.initializeCart();
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const totalItems = cart.reduce((sum, item) => sum + parseInt(item.quantity), 0);
+      document.querySelectorAll(".cart-counter").forEach(el => el.textContent = totalItems);
+
+      if (!cartDiv) {
+        return;
+      }
+
+      if (!cart.length) {
+        cartDiv.innerHTML = `
+          <tr>
+            <td colspan="5" class="text-center">
+              <h3>Your Cart is Empty</h3>
+              <p>Browse our store and add some items to your cart!</p>
+            </td>
+          </tr>
+        `;
+        updateCartTotals(0);
+        return;
+      }
+
+      let rows = "";
+      let totalPrice = 0.0;
+      cart.forEach((order, index) => {
+        const itemTotal = parseFloat(order.Price) * parseInt(order.quantity);
+        totalPrice += itemTotal;
+        rows += `
+          <tr>
+            <td>
+              <div class="d-flex align-items-center">
+                <img src="${resolveCartImage(order.ImageURL)}" alt="${order.Name}" style="width:60px; height:60px; object-fit:cover; margin-right:10px;">
+                <div>
+                  <strong>${order.Name}</strong>
+                </div>
+              </div>
+            </td>
+            <td>${formatBAM(order.Price)}</td>
+            <td>${order.quantity}</td>
+            <td>${formatBAM(itemTotal)}</td>
+            <td>
+              <button class="btn btn-danger btn-sm" onclick="CartService.removeLocalItem(${index})">
+                Delete
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      cartDiv.innerHTML = rows;
+      updateCartTotals(totalPrice);
       return;
     }
 
-    let rows = "";
+    $.ajax({
+      url: Constants.PROJECT_BASE_URL + "cart",
+      type: "GET",
+      headers: {
+        Authentication: token,
+      },
+      success: function (res) {
+        const payload = res.data || {};
+        const orders = payload.items || [];
 
-   let totalPrice = 0.00;
+        if (!cartDiv) {
+          const totalItems = orders.reduce((sum, order) => sum + parseInt(order.quantity), 0);
+          document.querySelectorAll(".cart-counter").forEach(el => el.textContent = totalItems);
+          return;
+        }
 
+        if (!orders.length) {
+          cartDiv.innerHTML = `
+            <tr>
+              <td colspan="5" class="text-center">
+                <h3>Your Cart is Empty</h3>
+                <p>Browse our store and add some items to your cart!</p>
+              </td>
+            </tr>
+          `;
+          updateCartTotals(0);
+          document.querySelectorAll(".cart-counter").forEach(el => el.textContent = 0);
+          return;
+        }
 
-    data.orders.forEach((order) => {
-     let productTotal = parseFloat(order.Price) * parseInt(order.quantity);
-    totalPrice += productTotal; // Add to overall total
-    });
+        let rows = "";
+        let totalPrice = 0.0;
 
-   let totalpricefloat = parseFloat(totalPrice).toFixed(2);
-    
-    const subtotal = document.getElementById("subtotal");
-    const tax = document.getElementById("tax");
-    const total = document.getElementById("total");
+        orders.forEach((order) => {
+          const itemTotal = parseFloat(order.Price) * parseInt(order.quantity);
+          totalPrice += itemTotal;
+          rows += `
+            <tr>
+              <td>
+                <div class="d-flex align-items-center">
+                  <img src="${resolveCartImage(order.ImageURL)}" alt="${order.Name}" style="width:60px; height:60px; object-fit:cover; margin-right:10px;">
+                  <div>
+                    <strong>${order.Name}</strong>
+                    <p class="mb-0 text-muted">${order.Description || ""}</p>
+                  </div>
+                </div>
+              </td>
+              <td>${formatBAM(order.Price)}</td>
+              <td>${order.quantity}</td>
+              <td>${formatBAM(itemTotal)}</td>
+              <td>
+                <button class="btn btn-danger btn-sm" onclick="CartService.deleteOrder(${order.CartItemID})">
+                  Delete
+                </button>
+              </td>
+            </tr>
+          `;
+        });
 
-    
-    subtotal.innerHTML = `$${totalpricefloat}`;
-    let taxAmount = totalPrice * 0.1;
-    
-    tax.innerHTML = `$${taxAmount.toFixed(2)}`;
-    
-    const priceAmount = taxAmount + totalPrice + 10;
+        cartDiv.innerHTML = rows;
+        updateCartTotals(totalPrice);
 
-    total.innerHTML = `$${parseFloat(priceAmount).toFixed(2)}`;
-    // Update cart counter bubbles
-    const totalItems = data.orders.reduce((sum, order) => sum + parseInt(order.quantity), 0);
-    document.querySelectorAll(".cart-counter").forEach(el => el.textContent = totalItems);
-    data.orders.forEach((order) => {
-      // Calculate total per product
-      const productTotal = parseFloat(order.Price);
-      rows += `
-        <tr>
-          <td>
-            <div class="d-flex align-items-center">
-              <img src="${order.ImageURL}" alt="${order.Name}" style="width:60px; height:60px; object-fit:cover; margin-right:10px;">
-              <div>
-                <strong>${order.Name}</strong>
-                <p class="mb-0 text-muted">${order.Description || ""}</p>
-              </div>
-            </div>
-          </td>
-          <td>$${parseFloat(order.Price).toFixed(2)}</td>
-          <td>${order.quantity}</td>
-          <td>$${productTotal.toFixed(2)}</td>
-          <td>
-            <button class="btn btn-danger btn-sm" onclick="CartService.deleteOrder(${order.CartItemID})">
-              Delete
-            </button>
-          </td>
-        </tr>
-      `;
-    });
-
-    // Set the table body with all rows
-    cartDiv.innerHTML = rows;
-  });
-},
-  countItems: function (iterable) {
-    if (iterable == null) return 0;
-
-    if (typeof iterable.length === "number") {
-      return iterable.length;
-    }
-
-    if (typeof iterable.size === "number") {
-      return iterable.size;
-    }
-
-    if (typeof iterable[Symbol.iterator] === "function") {
-      let count = 0;
-      for (const _ of iterable) {
-        count++;
+        const totalItems = orders.reduce((sum, order) => sum + parseInt(order.quantity), 0);
+        document.querySelectorAll(".cart-counter").forEach(el => el.textContent = totalItems);
+      },
+      error: function (err) {
+        console.error(err);
       }
-      return count;
-    }
-
-    return 0;
+    });
   },
 
-deleteOrder: function (cartItemID) {
-  console.log("deleting item with id:", cartItemID);
-  const userToken = localStorage.getItem("user_token");
-  if (!userToken) {
-    toastr.error("Please log in to manage your cart.");
-    return;
-  }
-  // Assume UserService.getUserId() returns the logged-in user's ID
-  const userID = UserService.getUserId();
+  removeLocalItem: function (index) {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    this.__init();
+  },
 
+  deleteOrder: function (cartItemID) {
+    const token = localStorage.getItem("user_token");
+    if (!token) {
+      toastr.error("Please log in to manage your cart.");
+      return;
+    }
 
-  console.log("USER ID IS ", userID);
-
-  
-
-  $.ajax({
-    url: `http://localhost/vildankWebProject/backend/cart/item/${cartItemID}/${userID}`,
-    type: "DELETE",
-    headers: {
-      Authentication: `${userToken}`,
-    },
-    success: function (data) {
-      console.log(data);
-      // Check if the deletion was actually successful
-      if (
-        data["Success: "] &&
-        data["Success: "].toString().trim().toLowerCase() === "true"
-      ) {
+    $.ajax({
+      url: Constants.PROJECT_BASE_URL + "cart/items/" + cartItemID,
+      type: "DELETE",
+      headers: {
+        Authentication: token,
+      },
+      success: function () {
         toastr.success("Deleted product from cart.");
-      } else {
-        toastr.error(data.Message || "Failed to delete product from cart.");
-      }
-    },
-    error: function (error) {
-      console.error(error);
-      toastr.error("Failed to delete product from cart.");
-    },
-  });
-},
-
-
+        CartService.__init();
+      },
+      error: function (error) {
+        console.error(error);
+        const msg = error?.responseJSON?.message || "Failed to delete product.";
+        toastr.error(msg);
+      },
+    });
+  },
 };
+
+function addToCart(productId, name, price, imageUrl) {
+  CartService.addToCart(productId, { name: name, price: price, imageUrl: imageUrl });
+}

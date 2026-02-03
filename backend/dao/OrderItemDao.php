@@ -6,9 +6,13 @@ class OrderItemDao extends BaseDao {
         parent::__construct("order_items");
     }
 
-    protected function getPrimaryKey() {
-        return "OrderItemID";
-    }
-}
+    
+    public function getByOrderId($orderId)
+    {
+        $stmt = $this->connection->prepare("SELECT * FROM order_items WHERE OrderID = :orderId");
+        $stmt->bindParam(':orderId', $orderId);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }}
 
-?>
+

@@ -1,0 +1,36 @@
+-- Restore local image URLs for products and console catalog
+UPDATE products SET ImageURL = 'backend/public/images/products/ps5.jpg' WHERE Name = 'PlayStation 5';
+UPDATE products SET ImageURL = 'backend/public/images/products/xbox-series-x.jpg' WHERE Name = 'Xbox Series X';
+UPDATE products SET ImageURL = 'backend/public/images/products/switch-oled.jpg' WHERE Name = 'Nintendo Switch OLED';
+UPDATE products SET ImageURL = 'backend/public/images/products/rtx-4070.jpg' WHERE Name = 'RTX 4070 Super';
+UPDATE products SET ImageURL = 'backend/public/images/products/gaming-headset.jpg' WHERE Name = 'Gaming Headset Pro';
+UPDATE products SET ImageURL = 'backend/public/images/products/mechanical-keyboard.jpg' WHERE Name = 'Mechanical Keyboard';
+UPDATE products SET ImageURL = 'backend/public/images/products/game-cyber-adventure.png' WHERE Name = 'Cyber Adventure';
+UPDATE products SET ImageURL = 'backend/public/images/products/game-racing-legends.jpg' WHERE Name = 'Racing Legends';
+UPDATE products SET ImageURL = 'backend/public/images/products/phone-pixel-9.jpg' WHERE Name = 'Pixel 9';
+UPDATE products SET ImageURL = 'backend/public/images/products/phone-galaxy-s24-ultra.jpg' WHERE Name = 'Galaxy S24 Ultra';
+UPDATE products SET ImageURL = 'backend/public/images/products/phone-iphone-15-pro.jpg' WHERE Name = 'iPhone 15 Pro';
+UPDATE products SET ImageURL = 'backend/public/images/products/phone-nothing-2.jpg' WHERE Name = 'Nothing Phone (2)';
+UPDATE products SET ImageURL = 'backend/public/images/products/phone-oneplus-12.jpg' WHERE Name = 'OnePlus 12';
+UPDATE products SET ImageURL = 'backend/public/images/products/console-ps5-slim.jpg' WHERE Name = 'PlayStation 5 Slim';
+UPDATE products SET ImageURL = 'backend/public/images/products/console-xbox-series-s.jpg' WHERE Name = 'Xbox Series S';
+UPDATE products SET ImageURL = 'backend/public/images/products/console-switch-lite.jpg' WHERE Name = 'Nintendo Switch Lite';
+UPDATE products SET ImageURL = 'backend/public/images/products/console-quest-3.jpg' WHERE Name = 'Meta Quest 3';
+UPDATE products SET ImageURL = 'backend/public/images/products/console-steam-deck.jpg' WHERE Name = 'Steam Deck LCD';
+UPDATE products SET ImageURL = 'backend/public/images/products/console-psvr2.jpg' WHERE Name = 'PSVR2';
+UPDATE products SET ImageURL = 'backend/public/images/products/console-elite-controller.jpg' WHERE Name = 'Xbox Elite Controller 2';
+UPDATE products SET ImageURL = 'backend/public/images/products/pc-monitor-27-165.jpg' WHERE Name = '27" 1440p 165Hz Monitor';
+UPDATE products SET ImageURL = 'backend/public/images/products/pc-mouse-rgb.jpg' WHERE Name = 'RGB Gaming Mouse';
+UPDATE products SET ImageURL = 'backend/public/images/products/pc-keyboard-pro.jpg' WHERE Name = 'Mechanical Keyboard Pro';
+UPDATE products SET ImageURL = 'backend/public/images/products/pc-mic-usb.jpg' WHERE Name = 'Streaming Microphone';
+UPDATE products SET ImageURL = 'backend/public/images/products/pc-headset-lite.jpg' WHERE Name = 'Gaming Headset Lite';
+UPDATE products SET ImageURL = 'backend/public/images/products/pc-mousepad-xl.jpg' WHERE Name = 'Desk Mouse Pad XL';
+UPDATE products SET ImageURL = 'backend/public/images/products/deal-mouse-keyboard.jpg' WHERE Name = 'Gaming Bundle: Mouse + Keyboard';
+UPDATE products SET ImageURL = 'backend/public/images/products/deal-console-pack.jpg' WHERE Name = 'Console Starter Pack';
+UPDATE products SET ImageURL = 'backend/public/images/products/deal-pc-essentials.jpg' WHERE Name = 'PC Setup Essentials';
+UPDATE products SET ImageURL = 'backend/public/images/products/deal-streamer-kit.jpg' WHERE Name = 'Streamer Kit';
+
+UPDATE console_catalog SET ImageURL = 'backend/public/images/products/ps5.jpg' WHERE Name = 'PlayStation 5';
+UPDATE console_catalog SET ImageURL = 'backend/public/images/products/xbox-series-x.jpg' WHERE Name = 'Xbox Series X';
+UPDATE console_catalog SET ImageURL = 'backend/public/images/products/switch-oled.jpg' WHERE Name = 'Nintendo Switch OLED';
+UPDATE console_catalog SET ImageURL = 'backend/public/images/products/console-steam-deck.jpg' WHERE Name = 'Steam Deck OLED';

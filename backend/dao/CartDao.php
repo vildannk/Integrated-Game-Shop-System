@@ -50,7 +50,6 @@ class CartDao extends BaseDao
             return ['Success: ' => "False", "Message:" => "Error deleting cart!"];
         }
 
-
         return ['Success: ' => "True", "Message:" => "Deleted cart succ3essfully."];
     }
 
@@ -65,5 +64,31 @@ class CartDao extends BaseDao
 
         $r = $total["price_total"];
         return $r;
+    }
+
+    public function getByUserId($userId)
+    {
+        $sql = "SELECT ci.CartItemID, ci.ProductID, ci.quantity
+                FROM cart_items ci
+                JOIN cart c ON ci.CartID = c.CartID
+                WHERE c.UserID = :userId";
+        $statement = $this->connection->prepare($sql);
+        $statement->bindValue(':userId', $userId);
+        $statement->execute();
+        return $statement->fetchAll();
+    }
+
+    public function clearCart($userId)
+    {
+        $sql = "DELETE ci FROM cart_items ci
+                JOIN cart c ON ci.CartID = c.CartID
+                WHERE c.UserID = :userId";
+        $statement = $this->connection->prepare($sql);
+        $statement->bindValue(':userId', $userId);
+        $statement->execute();
+
+        $reset = $this->connection->prepare("UPDATE cart SET price_total = 0 WHERE UserID = :userId");
+        $reset->bindValue(':userId', $userId);
+        $reset->execute();
     }
 }
