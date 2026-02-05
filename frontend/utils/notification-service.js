@@ -1,4 +1,6 @@
-let NotificationService = {
+import { Constants } from "./constants.js";
+
+export const NotificationService = {
   _cache: {},
   loadUserNotifications: function () {
     const token = localStorage.getItem("user_token");
@@ -331,3 +333,7 @@ let NotificationService = {
     bootstrap.Modal.getOrCreateInstance(modalEl).show();
   }
 };
+
+if (typeof window !== 'undefined') {
+  window.NotificationService = NotificationService;
+}

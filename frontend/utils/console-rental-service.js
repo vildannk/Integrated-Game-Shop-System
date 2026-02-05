@@ -1,3 +1,6 @@
+import { Constants } from "./constants.js";
+import { formatBAM } from "./price.js";
+
 function resolveRentalImage(url) {
   if (!url) return '';
   const v = window.__IMG_CACHE_BUST || '';
@@ -6,7 +9,7 @@ function resolveRentalImage(url) {
   if (url.startsWith('/')) return addBust(url);
   return addBust(`${window.location.origin}/diplomski/${url}`);
 }
-let ConsoleRentalService = {
+export const ConsoleRentalService = {
   catalog: [],
   rates: {},
   selectedConsole: null,
@@ -360,6 +363,10 @@ let ConsoleRentalService = {
     }
   }
 };
+
+if (typeof window !== 'undefined') {
+  window.ConsoleRentalService = ConsoleRentalService;
+}
 
 
 

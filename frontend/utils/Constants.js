@@ -1,4 +1,4 @@
-let Constants = {
+export const Constants = {
    PROJECT_BASE_URL: (function () {
       const host = window.location.hostname;
       if (host === 'localhost' || host === '127.0.0.1') {
@@ -8,5 +8,9 @@ let Constants = {
    })(),
    USER_ROLE: 'user',
    ADMIN_ROLE: 'admin'
+}
+
+if (typeof window !== 'undefined') {
+   window.Constants = Constants;
 }
 

@@ -1,3 +1,6 @@
+import { Constants } from "./constants.js";
+import { formatBAM } from "./price.js";
+
 function resolveImage(url) {
   if (!url) return '';
   const v = window.__IMG_CACHE_BUST || '';
@@ -7,7 +10,7 @@ function resolveImage(url) {
   return addBust(`${window.location.origin}/diplomski/${url}`);
 }
 
-let ProductService = {
+export const ProductService = {
   getProducts: function () {
     console.log("Fetching products...");
 
@@ -223,3 +226,7 @@ let ProductService = {
     });
   }
 };
+
+if (typeof window !== 'undefined') {
+  window.ProductService = ProductService;
+}

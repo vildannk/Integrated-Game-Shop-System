@@ -1,4 +1,6 @@
-let RestClient = {
+import { Constants } from "./constants.js";
+
+export const RestClient = {
    get: function (url, callback, error_callback) {
      $.ajax({
        url: Constants.PROJECT_BASE_URL + url,
@@ -53,3 +55,7 @@ let RestClient = {
      RestClient.request(url, "PUT", data, callback, error_callback);
    },
  };
+
+if (typeof window !== 'undefined') {
+  window.RestClient = RestClient;
+}

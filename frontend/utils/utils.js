@@ -1,4 +1,4 @@
-let Utils = {
+export const Utils = {
    datatable: function (table_id, columns, data, pageLength=15) {
        if ($.fn.dataTable.isDataTable("#" + table_id)) {
 $("#" + table_id)
@@ -23,4 +23,8 @@ $("#" + table_id)
          return null;
        }
      }  
+}
+
+if (typeof window !== 'undefined') {
+  window.Utils = Utils;
 }

@@ -1,4 +1,7 @@
-let ConsoleRentalAdmin = {
+import { Constants } from "./constants.js";
+import { formatBAM } from "./price.js";
+
+export const ConsoleRentalAdmin = {
   load: async function () {
     const token = localStorage.getItem("user_token");
     if (!token) {
@@ -82,3 +85,7 @@ let ConsoleRentalAdmin = {
     }
   }
 };
+
+if (typeof window !== 'undefined') {
+  window.ConsoleRentalAdmin = ConsoleRentalAdmin;
+}

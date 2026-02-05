@@ -1,0 +1,15 @@
+import "../utils/constants.js";
+import "../utils/price.js";
+import "../utils/utils.js";
+import "../utils/rest-client.js";
+import "../utils/user-service.js";
+import "../utils/order-service.js";
+import "../utils/cart-service.js";
+import "../utils/admin-service.js";
+import "../utils/auth-service.js";
+import "../utils/navbar-service.js";
+import "../utils/product-service.js";
+import "../utils/console-rental-service.js";
+import "../utils/console-rental-admin.js";
+import "../utils/notification-service.js";
+import "./scripts.js";

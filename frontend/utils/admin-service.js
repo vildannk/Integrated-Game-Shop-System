@@ -1,4 +1,7 @@
-let AdminService = {
+import { Constants } from "./constants.js";
+import { formatBAM } from "./price.js";
+
+export const AdminService = {
   init: function () {
     return;
   },
@@ -483,3 +486,7 @@ let AdminService = {
     });
   },
 };
+
+if (typeof window !== 'undefined') {
+  window.AdminService = AdminService;
+}

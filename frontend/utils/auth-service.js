@@ -1,4 +1,6 @@
-let AuthService = {
+import { Constants } from "./constants.js";
+
+export const AuthService = {
   register: function () {
     console.log("Registering user...");
 
@@ -91,6 +93,12 @@ let AuthService = {
 
   logOut: function () {
     localStorage.removeItem("user_token");
-    NavbarService.renderNavbar();
+    if (window.NavbarService) {
+      window.NavbarService.renderNavbar();
+    }
   },
 };
+
+if (typeof window !== 'undefined') {
+  window.AuthService = AuthService;
+}

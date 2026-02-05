@@ -1,3 +1,6 @@
+import { Constants } from "./constants.js";
+import { formatBAM } from "./price.js";
+
 function resolveCartImage(url) {
   if (!url) return '';
   const v = window.__IMG_CACHE_BUST || '';
@@ -21,7 +24,7 @@ function updateCartTotals(totalPrice) {
   }
 }
 
-let CartService = {
+export const CartService = {
   initializeCart: function () {
     if (!localStorage.getItem("cart")) {
       localStorage.setItem("cart", JSON.stringify([]));
@@ -238,6 +241,11 @@ let CartService = {
   },
 };
 
-function addToCart(productId, name, price, imageUrl) {
+export function addToCart(productId, name, price, imageUrl) {
   CartService.addToCart(productId, { name: name, price: price, imageUrl: imageUrl });
+}
+
+if (typeof window !== 'undefined') {
+  window.CartService = CartService;
+  window.addToCart = addToCart;
 }

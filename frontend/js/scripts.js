@@ -1,3 +1,13 @@
+import { Constants } from "../utils/constants.js";
+import { AuthService } from "../utils/auth-service.js";
+import { NavbarService } from "../utils/navbar-service.js";
+import { CartService } from "../utils/cart-service.js";
+import { ProductService } from "../utils/product-service.js";
+import { ConsoleRentalService } from "../utils/console-rental-service.js";
+import { ConsoleRentalAdmin } from "../utils/console-rental-admin.js";
+import { AdminService } from "../utils/admin-service.js";
+import { NotificationService } from "../utils/notification-service.js";
+
 // scripts.js
 window.toastr = window.toastr || {
   success: function(){},
@@ -83,6 +93,7 @@ function bindShopLinks() {
         });
     });
 }
+window.bindShopLinks = bindShopLinks;
 
 
 function ensureViewLoaded(viewId, file) {
@@ -121,17 +132,13 @@ function initView() {
     if (hash === '#notifications' && !ensureViewLoaded('notifications', 'notifications.html')) return;
     if (hash === '#admin-notifications' && !ensureViewLoaded('admin-notifications', 'admin-notifications.html')) return;
 
-    if (typeof NavbarService !== 'undefined') {
-        NavbarService.__init();
-    }
-    if (typeof CartService !== 'undefined') {
-        CartService.__init();
-    }
-    if (hash === '#home' && typeof ProductService !== 'undefined') {
+    NavbarService.__init();
+    CartService.__init();
+    if (hash === '#home') {
         ProductService.renderHomeProducts();
     }
 
-    if (hash === '#products' && typeof ProductService !== 'undefined') {
+    if (hash === '#products') {
         ProductService.getProducts();
         ProductService.renderCategorySections([
             { categoryId: 5, containerId: 'phones-products' },
@@ -141,30 +148,30 @@ function initView() {
         ]);
     }
 
-    if (hash === '#cart' && typeof CartService !== 'undefined') {
+    if (hash === '#cart') {
         CartService.__init();
     }
 
-    if (hash === '#console-rental' && typeof ConsoleRentalService !== 'undefined') {
+    if (hash === '#console-rental') {
         ConsoleRentalService.init();
     }
 
-    if (hash === '#admin' && typeof AdminService !== 'undefined') {
+    if (hash === '#admin') {
         AdminService.showAllProducts();
         AdminService.loadCategories();
     }
 
-    if (hash === '#admin-console-rentals' && typeof ConsoleRentalAdmin !== 'undefined') {
+    if (hash === '#admin-console-rentals') {
         ConsoleRentalAdmin.load();
     }
-    if (hash === '#admin-notifications' && typeof NotificationService !== 'undefined') {
+    if (hash === '#admin-notifications') {
         NotificationService.loadAdminNotifications();
     }
-    if (hash === '#notifications' && typeof NotificationService !== 'undefined') {
+    if (hash === '#notifications') {
         NotificationService.loadUserNotifications();
     }
 
-    if (hash === '#login' && typeof AuthService !== 'undefined') {
+    if (hash === '#login') {
         AuthService.login();
         const toggle = document.getElementById("togglePassword");
         if (toggle) {
@@ -178,7 +185,7 @@ function initView() {
         }
     }
 
-    if (hash === '#register' && typeof AuthService !== 'undefined') {
+    if (hash === '#register') {
         AuthService.register();
     }
 }
@@ -247,6 +254,7 @@ window.addEventListener("hashchange", normalizeShopHash);
 window.addEventListener("hashchange", toggleAdminLayout);
 
 $(document).ready(function () {
+    if (!document.getElementById("spapp") || !$.spapp) return;
     var app = $.spapp({
         defaultView: "#home",
         templateDir: "views/"
@@ -271,6 +279,7 @@ $(document).ready(function () {
 
 document.addEventListener("DOMContentLoaded", function () {
     if (typeof Swiper === 'undefined') return;
+    if (!document.querySelector(".mySwiper")) return;
     var swiper = new Swiper(".mySwiper", {
         loop: true,
         autoplay: {

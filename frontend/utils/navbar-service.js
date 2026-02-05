@@ -1,4 +1,4 @@
-let NavbarService = {
+export const NavbarService = {
   __init: function () {
     const navbar = document.getElementById("navbar");
     if (!navbar) return;
@@ -7,7 +7,7 @@ let NavbarService = {
 
     if (!userToken) {
       this.renderNavbar();
-      if (typeof bindShopLinks === "function") { bindShopLinks(); }
+      if (typeof window.bindShopLinks === "function") { window.bindShopLinks(); }
       return;
     }
 
@@ -17,19 +17,19 @@ let NavbarService = {
     } catch (e) {
       localStorage.removeItem("user_token");
       this.renderNavbar();
-      if (typeof bindShopLinks === "function") { bindShopLinks(); }
+      if (typeof window.bindShopLinks === "function") { window.bindShopLinks(); }
       return;
     }
     const roleId = decodedToken && decodedToken.user ? decodedToken.user.RoleID : null;
 
     if (roleId === 1) {
       this.renderAdminNavbar();
-      if (typeof bindShopLinks === "function") { bindShopLinks(); }
-      if (typeof NotificationService !== "undefined") { NotificationService.refreshNavbarCounter(true); }
+      if (typeof window.bindShopLinks === "function") { window.bindShopLinks(); }
+      if (window.NotificationService) { window.NotificationService.refreshNavbarCounter(true); }
     } else {
       this.renderUserNavbar();
-      if (typeof bindShopLinks === "function") { bindShopLinks(); }
-      if (typeof NotificationService !== "undefined") { NotificationService.refreshNavbarCounter(false); }
+      if (typeof window.bindShopLinks === "function") { window.bindShopLinks(); }
+      if (window.NotificationService) { window.NotificationService.refreshNavbarCounter(false); }
     }
   },
 
@@ -185,3 +185,7 @@ let NavbarService = {
     `;
   },
 };
+
+if (typeof window !== 'undefined') {
+  window.NavbarService = NavbarService;
+}

@@ -1,4 +1,8 @@
-let OrderService = {
+import { Constants } from "./constants.js";
+import { UserService } from "./user-service.js";
+import { CartService } from "./cart-service.js";
+
+export const OrderService = {
   openCheckoutModal: function () {
     const modalEl = document.getElementById("checkoutModal");
     const form = document.getElementById("checkoutForm");
@@ -130,18 +134,18 @@ let OrderService = {
         if (modalEl && typeof bootstrap !== "undefined") {
           bootstrap.Modal.getOrCreateInstance(modalEl).hide();
         }
-        if (typeof CartService !== "undefined") {
-          CartService.__init();
-        }
+        CartService.__init();
       },
       error: function (error) {
         const msg = error?.responseJSON?.message || "Purchase failed.";
         toastr.error(msg);
         console.error("Checkout failed:", error);
-        if (typeof CartService !== "undefined") {
-          CartService.__init();
-        }
+        CartService.__init();
       },
     });
   },
 };
+
+if (typeof window !== 'undefined') {
+  window.OrderService = OrderService;
+}
