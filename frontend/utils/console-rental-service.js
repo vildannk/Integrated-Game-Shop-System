@@ -6,8 +6,10 @@ function resolveRentalImage(url) {
   const v = window.__IMG_CACHE_BUST || '';
   const addBust = (u) => v ? (u + (u.includes('?') ? '&' : '?') + 'v=' + v) : u;
   if (url.startsWith('http')) return addBust(url);
-  if (url.startsWith('/')) return addBust(url);
-  return addBust(`${window.location.origin}/diplomski/${url}`);
+  let path = url.replace(/^\//, '');
+  if (path.startsWith('diplomski/')) path = path.slice('diplomski/'.length);
+  if (path.startsWith('backend/')) path = path.slice('backend/'.length);
+  return addBust(`${constant.PROJECT_BASE_URL}${path}`);
 }
 export const ConsoleRentalService = {
   catalog: [],

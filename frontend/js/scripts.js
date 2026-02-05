@@ -95,6 +95,19 @@ function bindShopLinks() {
 }
 window.bindShopLinks = bindShopLinks;
 
+function applyBackendAssets() {
+    document.querySelectorAll("[data-backend-src]").forEach((el) => {
+        const path = el.getAttribute("data-backend-src");
+        if (!path) return;
+        const url = `${constant.PROJECT_BASE_URL}${path}`;
+        if (el.tagName.toLowerCase() === "link") {
+            el.setAttribute("href", url);
+        } else {
+            el.setAttribute("src", url);
+        }
+    });
+}
+
 
 function ensureViewLoaded(viewId, file) {
     const section = document.getElementById(viewId);
@@ -249,6 +262,7 @@ function bindFormHandlers() {
 
 // Initialize when page loads
 document.addEventListener("DOMContentLoaded", normalizeShopHash);
+document.addEventListener("DOMContentLoaded", applyBackendAssets);
 document.addEventListener("DOMContentLoaded", initializePage);
 window.addEventListener("hashchange", normalizeShopHash);
 window.addEventListener("hashchange", toggleAdminLayout);
