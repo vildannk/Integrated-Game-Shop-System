@@ -411,7 +411,11 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Admin','admin@example.com','$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9/3BzW4mJRyXQf4aXlA4e.','Admin HQ',1,1,1,'2026-02-01 18:25:31'),(2,'Customer','user@example.com','$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9/3BzW4mJRyXQf4aXlA4e.','Customer Address',2,2,0,'2026-02-01 18:25:31'),(3,'Vildan','vildan.kadric@stu.ibu.edu.ba','$2y$10$Cwayf9yV1kfc6YMOz/kp2eoe8hPDSNinC3RHkPC/WbPZGVDY1sx6.',NULL,1,1,1,'2026-02-01 21:00:09'),(4,'VildanUser','vildan@gmail.com','$2y$10$c9VY/2NtQYeg8/2LPNAaSeZZmDaXO1ciJpQEF49Un.YKPCth2ekxK',NULL,2,2,0,'2026-02-03 07:30:53');
+INSERT INTO `users` (`UserID`,`Name`,`Email`,`Password`,`Address`,`RoleID`,`CreatedAt`) VALUES
+(1,'Admin','admin@example.com','$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9/3BzW4mJRyXQf4aXlA4e.','Admin HQ',1,'2026-02-01 18:25:31'),
+(2,'Customer','user@example.com','$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9/3BzW4mJRyXQf4aXlA4e.','Customer Address',2,'2026-02-01 18:25:31'),
+(3,'Vildan','vildan.kadric@stu.ibu.edu.ba','$2y$10$Cwayf9yV1kfc6YMOz/kp2eoe8hPDSNinC3RHkPC/WbPZGVDY1sx6.',NULL,1,'2026-02-01 21:00:09'),
+(4,'VildanUser','vildan@gmail.com','$2y$10$c9VY/2NtQYeg8/2LPNAaSeZZmDaXO1ciJpQEF49Un.YKPCth2ekxK',NULL,2,'2026-02-03 07:30:53');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
