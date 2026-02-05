@@ -7,6 +7,10 @@
   },
   "servers": [
     {
+      "url": "https://integrated-game-shop-system-backend-production.up.railway.app",
+      "description": "Production"
+    },
+    {
       "url": "http://localhost/diplomski/backend",
       "description": "Local"
     }
