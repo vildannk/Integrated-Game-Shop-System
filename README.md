@@ -19,9 +19,7 @@ Web application for product browsing, cart checkout, console rentals, and admin 
 ## Project Structure
 ```
 backend/              PHP API, services, DAOs, routes
-frontend/             Views, CSS, JS utilities
-admin-panel.html      Standalone admin UI
-index.html            Main SPA entry point
+frontend/             Views, CSS, JS utilities, entry HTML
 ```
 
 ## Setup (Local with XAMPP)
@@ -30,8 +28,8 @@ index.html            Main SPA entry point
 3. Create a MySQL database named `webprojekat`
 4. Import the database schema and seed data (see `backend/data/db_init.sql`)
 5. Open in browser:
-   - User app: `http://localhost/diplomski/index.html`
-   - Admin panel: `http://localhost/diplomski/admin-panel.html`
+   - User app: `http://localhost/diplomski/frontend/index.html`
+   - Admin panel: `http://localhost/diplomski/frontend/admin-panel.html`
 
 ## Configuration
 Database settings are defined in `backend/config/Config.php`. Update it if your MySQL credentials differ from the defaults.
@@ -49,7 +47,7 @@ Database settings are defined in `backend/config/Config.php`. Update it if your 
 - `#contact` – Contact form
 - `#notifications` – User notifications
 - `#admin-notifications` – Admin notifications
-- `#admin-panel` – Admin dashboard (via `admin-panel.html`)
+- `#admin-panel` – Admin dashboard (via `frontend/admin-panel.html`)
 
 ## API Overview (Backend)
 Main routes (see `backend/openapi.json` for full list):

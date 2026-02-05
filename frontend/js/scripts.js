@@ -94,7 +94,7 @@ function ensureViewLoaded(viewId, file) {
         return true;
     }
     if (typeof $ !== "undefined") {
-        $(section).load("frontend/views/" + file, function () {
+        $(section).load("views/" + file, function () {
             section.dataset.loaded = "1";
             if (typeof onViewReady === "function") {
                 onViewReady();
@@ -249,7 +249,7 @@ window.addEventListener("hashchange", toggleAdminLayout);
 $(document).ready(function () {
     var app = $.spapp({
         defaultView: "#home",
-        templateDir: "frontend/views/"
+        templateDir: "views/"
     });
 
     app.route({ view: "home", onReady: onViewReady });
