@@ -1,4 +1,4 @@
-export const Constants = {
+export const constant = {
    PROJECT_BASE_URL: (function () {
       const host = window.location.hostname;
       if (host === 'localhost' || host === '127.0.0.1') {
@@ -11,6 +11,6 @@ export const Constants = {
 }
 
 if (typeof window !== 'undefined') {
-   window.Constants = Constants;
+   window.constant = constant;
 }
 

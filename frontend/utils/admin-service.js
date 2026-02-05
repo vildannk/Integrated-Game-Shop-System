@@ -1,4 +1,4 @@
-import { Constants } from "./constants.js";
+import { constant } from "./constant.js";
 import { formatBAM } from "./price.js";
 
 export const AdminService = {
@@ -8,7 +8,7 @@ export const AdminService = {
 
   showAllProducts: function () {
     $.ajax({
-      url: Constants.PROJECT_BASE_URL + "products",
+      url: constant.PROJECT_BASE_URL + "products",
       type: "GET",
       headers: {
         Authentication: localStorage.getItem("user_token"),
@@ -41,7 +41,7 @@ export const AdminService = {
 
   loadCategories: function () {
     $.ajax({
-      url: Constants.PROJECT_BASE_URL + "categories",
+      url: constant.PROJECT_BASE_URL + "categories",
       type: "GET",
       success: function (data) {
         const categoryList = document.getElementById("category-table-body-admin");
@@ -104,7 +104,7 @@ export const AdminService = {
 
   createCategory: function (payload, modal) {
     $.ajax({
-      url: Constants.PROJECT_BASE_URL + "categories",
+      url: constant.PROJECT_BASE_URL + "categories",
       type: "POST",
       headers: {
         Authentication: localStorage.getItem("user_token"),
@@ -159,7 +159,7 @@ export const AdminService = {
 
   updateCategory: function (id, payload, modal) {
     $.ajax({
-      url: Constants.PROJECT_BASE_URL + "categories/" + id,
+      url: constant.PROJECT_BASE_URL + "categories/" + id,
       type: "PUT",
       headers: {
         Authentication: localStorage.getItem("user_token"),
@@ -181,7 +181,7 @@ export const AdminService = {
   deleteCategory: function (id) {
     if (!confirm("Delete this category?")) return;
     $.ajax({
-      url: Constants.PROJECT_BASE_URL + "categories/" + id,
+      url: constant.PROJECT_BASE_URL + "categories/" + id,
       type: "DELETE",
       headers: {
         Authentication: localStorage.getItem("user_token"),
@@ -199,7 +199,7 @@ export const AdminService = {
 
   fetchCategories: function (callback) {
     $.ajax({
-      url: Constants.PROJECT_BASE_URL + "categories",
+      url: constant.PROJECT_BASE_URL + "categories",
       type: "GET",
       success: function (data) {
         callback(data.data || []);
@@ -215,7 +215,7 @@ export const AdminService = {
     formData.append('image', file);
 
     return $.ajax({
-      url: Constants.PROJECT_BASE_URL + "uploads/images",
+      url: constant.PROJECT_BASE_URL + "uploads/images",
       type: "POST",
       headers: {
         Authentication: localStorage.getItem("user_token"),
@@ -341,7 +341,7 @@ export const AdminService = {
 
   createProduct: function (payload, modal) {
     $.ajax({
-      url: Constants.PROJECT_BASE_URL + "products",
+      url: constant.PROJECT_BASE_URL + "products",
       type: "POST",
       headers: {
         Authentication: localStorage.getItem("user_token"),
@@ -363,7 +363,7 @@ export const AdminService = {
   deleteProduct: function (productId) {
     if (!confirm("Delete this product?")) return;
     $.ajax({
-      url: Constants.PROJECT_BASE_URL + "products/" + productId,
+      url: constant.PROJECT_BASE_URL + "products/" + productId,
       type: "DELETE",
       headers: {
         Authentication: localStorage.getItem("user_token"),
@@ -381,7 +381,7 @@ export const AdminService = {
 
   editProduct: function (productId) {
     $.ajax({
-      url: Constants.PROJECT_BASE_URL + "products/" + productId,
+      url: constant.PROJECT_BASE_URL + "products/" + productId,
       type: "GET",
       headers: {
         Authentication: localStorage.getItem("user_token"),
@@ -468,7 +468,7 @@ export const AdminService = {
 
   updateProduct: function (productId, updatedProduct) {
     $.ajax({
-      url: Constants.PROJECT_BASE_URL + "products/" + productId,
+      url: constant.PROJECT_BASE_URL + "products/" + productId,
       type: "PUT",
       headers: {
         Authentication: localStorage.getItem("user_token"),

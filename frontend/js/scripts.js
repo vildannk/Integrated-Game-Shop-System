@@ -1,4 +1,4 @@
-import { Constants } from "../utils/constants.js";
+import { constant } from "../utils/constant.js";
 import { AuthService } from "../utils/auth-service.js";
 import { NavbarService } from "../utils/navbar-service.js";
 import { CartService } from "../utils/cart-service.js";
@@ -229,7 +229,7 @@ function bindFormHandlers() {
             const message = document.getElementById("message")?.value || "";
 
             $.ajax({
-                url: Constants.PROJECT_BASE_URL + "contact/messages",
+                url: constant.PROJECT_BASE_URL + "contact/messages",
                 type: "POST",
                 data: JSON.stringify({ name, email, subject, message }),
                 contentType: "application/json",

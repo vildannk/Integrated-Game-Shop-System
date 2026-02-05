@@ -1,9 +1,9 @@
-import { Constants } from "./constants.js";
+import { constant } from "./constant.js";
 
 export const RestClient = {
    get: function (url, callback, error_callback) {
      $.ajax({
-       url: Constants.PROJECT_BASE_URL + url,
+       url: constant.PROJECT_BASE_URL + url,
        type: "GET",
        beforeSend: function (xhr) {
          xhr.setRequestHeader(
@@ -21,7 +21,7 @@ export const RestClient = {
    },
    request: function (url, method, data, callback, error_callback) {
      $.ajax({
-       url: Constants.PROJECT_BASE_URL + url,
+       url: constant.PROJECT_BASE_URL + url,
        type: method,
        beforeSend: function (xhr) {
          xhr.setRequestHeader(

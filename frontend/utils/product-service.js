@@ -1,4 +1,4 @@
-import { Constants } from "./constants.js";
+import { constant } from "./constant.js";
 import { formatBAM } from "./price.js";
 
 function resolveImage(url) {
@@ -15,7 +15,7 @@ export const ProductService = {
     console.log("Fetching products...");
 
     $.ajax({
-      url: Constants.PROJECT_BASE_URL + "products",
+      url: constant.PROJECT_BASE_URL + "products",
       type: "GET",
       contentType: "application/json",
       success: function (res) {
@@ -72,7 +72,7 @@ export const ProductService = {
 
   renderCategorySections: function (sections) {
     $.ajax({
-      url: Constants.PROJECT_BASE_URL + "products",
+      url: constant.PROJECT_BASE_URL + "products",
       type: "GET",
       contentType: "application/json",
       success: function (res) {
@@ -129,7 +129,7 @@ export const ProductService = {
 
   renderHomeProducts: function (limit = 4) {
     $.ajax({
-      url: Constants.PROJECT_BASE_URL + "products",
+      url: constant.PROJECT_BASE_URL + "products",
       type: "GET",
       contentType: "application/json",
       success: function (res) {
@@ -184,7 +184,7 @@ export const ProductService = {
     console.log("Fetching product with ID:", productId);
 
     $.ajax({
-      url: Constants.PROJECT_BASE_URL + "products/" + productId,
+      url: constant.PROJECT_BASE_URL + "products/" + productId,
       type: "GET",
       contentType: "application/json",
       success: function (res) {

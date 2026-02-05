@@ -1,4 +1,4 @@
-import { Constants } from "./constants.js";
+import { constant } from "./constant.js";
 import { formatBAM } from "./price.js";
 
 export const ConsoleRentalAdmin = {
@@ -9,7 +9,7 @@ export const ConsoleRentalAdmin = {
       return;
     }
     try {
-      const res = await fetch(Constants.PROJECT_BASE_URL + "rentals", {
+      const res = await fetch(constant.PROJECT_BASE_URL + "rentals", {
         method: "GET",
         headers: {
           Authentication: token
@@ -68,7 +68,7 @@ export const ConsoleRentalAdmin = {
 
   updateStatusValue: async function (rentalId, status) {
     try {
-      const res = await fetch(Constants.PROJECT_BASE_URL + `rentals/` + rentalId, {
+      const res = await fetch(constant.PROJECT_BASE_URL + `rentals/` + rentalId, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

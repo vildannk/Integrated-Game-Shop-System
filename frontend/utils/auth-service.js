@@ -1,4 +1,4 @@
-import { Constants } from "./constants.js";
+import { constant } from "./constant.js";
 
 export const AuthService = {
   register: function () {
@@ -26,7 +26,7 @@ export const AuthService = {
         toastr.error("Invalid Email!");
       } else {
         $.ajax({
-          url: Constants.PROJECT_BASE_URL + "auth/register",
+          url: constant.PROJECT_BASE_URL + "auth/register",
           type: "POST",
           data: JSON.stringify(data),
           contentType: "application/json",
@@ -74,7 +74,7 @@ export const AuthService = {
       };
 
       $.ajax({
-        url: Constants.PROJECT_BASE_URL + "auth/login",
+        url: constant.PROJECT_BASE_URL + "auth/login",
         type: "POST",
         data: JSON.stringify(loginData),
         contentType: "application/json",

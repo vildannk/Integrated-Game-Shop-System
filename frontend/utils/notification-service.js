@@ -1,4 +1,4 @@
-import { Constants } from "./constants.js";
+import { constant } from "./constant.js";
 
 export const NotificationService = {
   _cache: {},
@@ -8,7 +8,7 @@ export const NotificationService = {
       toastr.error("Login to view notifications.");
       return;
     }
-    fetch(Constants.PROJECT_BASE_URL + "notifications/me", {
+    fetch(constant.PROJECT_BASE_URL + "notifications/me", {
       method: "GET",
       headers: { Authentication: token }
     })
@@ -30,7 +30,7 @@ export const NotificationService = {
       toastr.error("Login as admin to view notifications.");
       return;
     }
-    fetch(Constants.PROJECT_BASE_URL + "notifications", {
+    fetch(constant.PROJECT_BASE_URL + "notifications", {
       method: "GET",
       headers: { Authentication: token }
     })
@@ -139,7 +139,7 @@ export const NotificationService = {
   markRead: function (id, isAdmin, btn) {
     const token = localStorage.getItem("user_token");
     if (!token) return;
-    fetch(Constants.PROJECT_BASE_URL + "notifications/" + id + "/read", {
+    fetch(constant.PROJECT_BASE_URL + "notifications/" + id + "/read", {
       method: "PATCH",
       headers: { Authentication: token }
     })
@@ -161,7 +161,7 @@ export const NotificationService = {
   markUnread: function (id, isAdmin) {
     const token = localStorage.getItem("user_token");
     if (!token) return;
-    fetch(Constants.PROJECT_BASE_URL + "notifications/" + id + "/unread", {
+    fetch(constant.PROJECT_BASE_URL + "notifications/" + id + "/unread", {
       method: "PATCH",
       headers: { Authentication: token }
     })
@@ -188,7 +188,7 @@ export const NotificationService = {
   adminRentalDecision: function (notificationId, rentalId, status, btn) {
     const token = localStorage.getItem("user_token");
     if (!token) return;
-    fetch(Constants.PROJECT_BASE_URL + "rentals/" + rentalId, {
+    fetch(constant.PROJECT_BASE_URL + "rentals/" + rentalId, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -199,7 +199,7 @@ export const NotificationService = {
       .then(res => {
         if (!res.ok) throw new Error("Failed to update rental");
         const statusLabel = status === "confirmed" ? "Accepted" : "Declined";
-        return fetch(Constants.PROJECT_BASE_URL + "notifications/" + notificationId + "/read", {
+        return fetch(constant.PROJECT_BASE_URL + "notifications/" + notificationId + "/read", {
           method: "PATCH",
           headers: { 
             "Content-Type": "application/json",
@@ -258,8 +258,8 @@ export const NotificationService = {
     const token = localStorage.getItem("user_token");
     if (!token) return;
     const url = isAdmin
-      ? Constants.PROJECT_BASE_URL + "notifications"
-      : Constants.PROJECT_BASE_URL + "notifications/me";
+      ? constant.PROJECT_BASE_URL + "notifications"
+      : constant.PROJECT_BASE_URL + "notifications/me";
     fetch(url, {
       method: "GET",
       headers: { Authentication: token }

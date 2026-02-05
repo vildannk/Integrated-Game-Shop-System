@@ -1,4 +1,4 @@
-import { Constants } from "./constants.js";
+import { constant } from "./constant.js";
 import { formatBAM } from "./price.js";
 
 function resolveCartImage(url) {
@@ -60,7 +60,7 @@ export const CartService = {
     }
 
     $.ajax({
-      url: Constants.PROJECT_BASE_URL + "cart/items",
+      url: constant.PROJECT_BASE_URL + "cart/items",
       type: "POST",
       data: JSON.stringify({ ProductID: product_id, quantity: 1 }),
       contentType: "application/json",
@@ -138,7 +138,7 @@ export const CartService = {
     }
 
     $.ajax({
-      url: Constants.PROJECT_BASE_URL + "cart",
+      url: constant.PROJECT_BASE_URL + "cart",
       type: "GET",
       headers: {
         Authentication: token,
@@ -223,7 +223,7 @@ export const CartService = {
     }
 
     $.ajax({
-      url: Constants.PROJECT_BASE_URL + "cart/items/" + cartItemID,
+      url: constant.PROJECT_BASE_URL + "cart/items/" + cartItemID,
       type: "DELETE",
       headers: {
         Authentication: token,

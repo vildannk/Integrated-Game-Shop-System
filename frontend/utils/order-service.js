@@ -1,4 +1,4 @@
-import { Constants } from "./constants.js";
+import { constant } from "./constant.js";
 import { UserService } from "./user-service.js";
 import { CartService } from "./cart-service.js";
 
@@ -120,7 +120,7 @@ export const OrderService = {
     console.log(userID);
 
     $.ajax({
-      url: Constants.PROJECT_BASE_URL + "cart/checkout",
+      url: constant.PROJECT_BASE_URL + "cart/checkout",
       type: "POST",
       headers: {
         Authentication: userToken,

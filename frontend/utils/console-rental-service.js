@@ -1,4 +1,4 @@
-import { Constants } from "./constants.js";
+import { constant } from "./constant.js";
 import { formatBAM } from "./price.js";
 
 function resolveRentalImage(url) {
@@ -42,7 +42,7 @@ export const ConsoleRentalService = {
 
   fetchCatalog: async function () {
     try {
-      const res = await fetch(Constants.PROJECT_BASE_URL + "rentals/catalog", { cache: 'no-store' });
+      const res = await fetch(constant.PROJECT_BASE_URL + "rentals/catalog", { cache: 'no-store' });
       if (!res.ok) throw new Error("Failed to load catalog");
       const data = (await res.json()).data || [];
       this.catalog = data;
@@ -288,7 +288,7 @@ export const ConsoleRentalService = {
     };
 
     try {
-      const response = await fetch(Constants.PROJECT_BASE_URL + "rentals", {
+      const response = await fetch(constant.PROJECT_BASE_URL + "rentals", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -315,7 +315,7 @@ export const ConsoleRentalService = {
     if (!token) return;
 
     try {
-      const response = await fetch(Constants.PROJECT_BASE_URL + "rentals/me", {
+      const response = await fetch(constant.PROJECT_BASE_URL + "rentals/me", {
         method: "GET",
         headers: {
           Authentication: token

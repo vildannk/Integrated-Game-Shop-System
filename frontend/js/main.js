@@ -1,4 +1,4 @@
-import "../utils/constants.js";
+import "../utils/constant.js";
 import "../utils/price.js";
 import "../utils/utils.js";
 import "../utils/rest-client.js";
