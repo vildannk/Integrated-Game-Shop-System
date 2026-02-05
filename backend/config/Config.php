@@ -9,31 +9,41 @@ class Config
 {
     public static function DATABASE_NAME()
     {
-        return 'webprojekat';
+        $fromEnv = getenv('DB_NAME');
+        return $fromEnv !== false && $fromEnv !== '' ? $fromEnv : 'webprojekat';
     }
     public static function DATABASE_PORT()
     {
+        $fromEnv = getenv('DB_PORT');
+        if ($fromEnv !== false && $fromEnv !== '') {
+            return (int)$fromEnv;
+        }
         return 3306;
     }
     public static function DATABASE_USERNAME()
     {
-        return 'root';
+        $fromEnv = getenv('DB_USER');
+        return $fromEnv !== false && $fromEnv !== '' ? $fromEnv : 'root';
     }
     public static function DATABASE_PASSWORD()
     {
-        return '';
+        $fromEnv = getenv('DB_PASS');
+        return $fromEnv !== false && $fromEnv !== '' ? $fromEnv : '';
     }
     public static function DATABASE_HOST()
     {
-        return '127.0.0.1';
+        $fromEnv = getenv('DB_HOST');
+        return $fromEnv !== false && $fromEnv !== '' ? $fromEnv : '127.0.0.1';
     }
     public static function JWT_SECRET()
     {
-        return 'SEProject2025';
+        $fromEnv = getenv('JWT_SECRET');
+        return $fromEnv !== false && $fromEnv !== '' ? $fromEnv : 'SEProject2025';
     }
 
     public static function EMAIL_FROM()
     {
-        return 'no-reply@gamegear.local';
+        $fromEnv = getenv('EMAIL_FROM');
+        return $fromEnv !== false && $fromEnv !== '' ? $fromEnv : 'vildan.kadric@stu.ibu.edu.ba';
     }
 }
