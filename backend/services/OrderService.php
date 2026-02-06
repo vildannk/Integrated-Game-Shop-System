@@ -46,6 +46,33 @@ class OrderService extends BaseService {
         ];
     }
 
+    public function calculateCartTotal($userId) {
+        $cartItems = $this->cartDao->getByUserId($userId);
+        if (empty($cartItems)) {
+            throw new Exception("Cart is empty.");
+        }
+
+        $totalAmount = 0;
+        $itemCount = 0;
+        foreach ($cartItems as $item) {
+            $product = $this->productDao->getById($item['ProductID']);
+            if (!$product) {
+                throw new Exception("Product not found: " . $item['ProductID']);
+            }
+            if ($product['Stock'] < $item['quantity']) {
+                throw new Exception("Not enough stock for product: " . $product['Name']);
+            }
+            $itemTotal = $product['Price'] * $item['quantity'];
+            $totalAmount += $itemTotal;
+            $itemCount += (int)$item['quantity'];
+        }
+
+        return [
+            'totalAmount' => $totalAmount,
+            'itemCount' => $itemCount
+        ];
+    }
+
     public function updateOrderStatus($orderId, $status) {
         $allowed = ['pending','processing','shipped','delivered','cancelled'];
         if (!in_array($status, $allowed, true)) {

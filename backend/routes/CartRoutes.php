@@ -74,6 +74,12 @@ Flight::route('POST /cart/checkout', function () {
         ], $payment);
         json_response(['orderId' => $orderId], true, 201, 'Order created');
     } catch (Exception $e) {
+        error_log('Checkout error: ' . $e->getMessage() . ' | userId=' . $userId . ' | shipping=' . json_encode([
+            'address' => $shippingAddress,
+            'city' => $shippingCity,
+            'postalCode' => $shippingPostal,
+            'streetNumber' => $shippingStreetNumber
+        ]));
         json_response(null, false, 400, $e->getMessage());
     }
 });

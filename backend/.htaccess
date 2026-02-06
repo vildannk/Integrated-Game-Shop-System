@@ -11,6 +11,12 @@
     RewriteRule ^ index.php [L]
 </IfModule>
 
+<IfModule mod_env.c>
+    # Stripe test keys (set values locally; do not commit secrets)
+    SetEnv STRIPE_PUBLISHABLE_KEY ""
+    SetEnv STRIPE_SECRET_KEY ""
+</IfModule>
+
 <Files ".htaccess">
     Require all granted
 </Files>

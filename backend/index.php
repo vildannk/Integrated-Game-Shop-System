@@ -33,6 +33,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
+$stripe_publishable_key = getenv('STRIPE_PUBLISHABLE_KEY') ?: '';
+$stripe_secret_key = getenv('STRIPE_SECRET_KEY') ?: '';
+if ($stripe_publishable_key === '' || $stripe_secret_key === '') {
+    error_log('Stripe keys are not configured. Set STRIPE_PUBLISHABLE_KEY and STRIPE_SECRET_KEY.');
+}
+
 require_once __DIR__ . '/services/AuthService.php';
 require_once __DIR__ . '/services/ProductService.php';
 require_once __DIR__ . '/services/UserService.php';
@@ -69,6 +75,7 @@ require_once __DIR__ . '/routes/CategoryRoutes.php';
 require_once __DIR__ . '/routes/UploadRoutes.php';
 require_once __DIR__ . '/routes/NotificationRoutes.php';
 require_once __DIR__ . '/routes/ContactRoutes.php';
+require_once __DIR__ . '/routes/StripeRoutes.php';
 
 Flight::route('GET /openapi.json', function() {
     ob_clean();
